@@ -1,12 +1,11 @@
 extern crate sdl2;
 
-mod class;
-use class::retangulo::Retangulo;
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-use sdl2::video::{Window, WindowBuildError};
-use sdl2::{EventPump, Sdl, VideoSubsystem};
+use sdl2::video::Window;
+use sdl2::{Sdl, VideoSubsystem};
+use game::base::retangulo::{Retangulo, RetanguloChar};
+use game::interface::draw_base::BaseDrawFunction;
+use game::{create_window, event_listener};
 use std::time::Duration;
 
 pub fn main() {
@@ -21,7 +20,7 @@ pub fn main() {
     canvas.clear();
     canvas.present();
     let mut event_pump = sdl_context.event_pump().unwrap();
-    let mut my_rect_1: Retangulo = Retangulo::new(50, 50, 50, 50);
+    let mut my_rect_1: RetanguloChar = RetanguloChar::new(50, 50, 50, 50);
     let mut my_rect_2: Retangulo = Retangulo::new(250, 250, 50, 50);
     my_rect_1._set_color(255, 255, 255);
     my_rect_2._set_color(255, 255, 0);
@@ -40,32 +39,4 @@ pub fn main() {
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
-}
-
-fn event_listener(event_pump: &mut EventPump, my_rect: &mut Retangulo) -> bool {
-    for event in event_pump.poll_iter() {
-        match event {
-            Event::Quit { .. }
-            | Event::KeyDown {
-                keycode: Some(Keycode::Escape),
-                ..
-            } => return false,
-            _ => {
-                my_rect.control(event);
-            }
-        }
-    }
-    return true;
-}
-
-fn create_window(
-    title: &str,
-    width: u32,
-    height: u32,
-    video_subsystem: &VideoSubsystem,
-) -> Result<Window, WindowBuildError> {
-    video_subsystem
-        .window(title, width, height)
-        .position_centered()
-        .build()
 }

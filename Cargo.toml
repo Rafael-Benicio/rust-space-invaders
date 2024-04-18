@@ -1,5 +1,5 @@
 [package]
-name = "sdl_game"
+name = "game"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,3 +7,10 @@ edition = "2021"
 
 [dependencies]
 sdl2="*"
+
+[lib]
+path="src/lib.rs"
+
+[[bin]]
+name = "game"
+path = "src/bin/game.rs"
