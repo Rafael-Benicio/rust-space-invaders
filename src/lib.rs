@@ -1,5 +1,5 @@
 use crate::base::retangulo::RetanguloChar;
-use crate::interface::controler::Control;
+use crate::traits::controler::Control;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::video::{Window, WindowBuildError};
@@ -7,7 +7,7 @@ use sdl2::EventPump;
 use sdl2::VideoSubsystem;
 
 pub mod base;
-pub mod interface;
+pub mod traits;
 
 pub fn event_listener(event_pump: &mut EventPump, my_rect: &mut RetanguloChar) -> bool {
     for event in event_pump.poll_iter() {

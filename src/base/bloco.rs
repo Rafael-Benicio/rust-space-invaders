@@ -1,18 +1,18 @@
 use crate::traits::collision::BoxColision;
-use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
-use sdl2::{
-    event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
-};
+use crate::Window;
+use sdl2::pixels::Color;
+use sdl2::rect::Rect;
+use sdl2::render::Canvas;
 
-pub struct RetanguloChar {
+pub struct Retangulo {
     rect: Rect,
     color: Color,
 }
 
-impl BaseDrawFunction for RetanguloChar {
+impl BaseDrawFunction for Retangulo {
     fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
-        RetanguloChar {
+        Retangulo {
             rect: Rect::new(x, y, width, height),
             color: Color::RGB(255, 255, 255),
         }
@@ -39,32 +39,7 @@ impl BaseDrawFunction for RetanguloChar {
     }
 }
 
-impl Control for RetanguloChar {
-    fn control(&mut self, event: Event) {
-        match event {
-            Event::KeyDown {
-                keycode: Some(Keycode::Up),
-                ..
-            } => self.update_position(0, -1),
-            Event::KeyDown {
-                keycode: Some(Keycode::Down),
-                ..
-            } => self.update_position(0, 1),
-            Event::KeyDown {
-                keycode: Some(Keycode::Left),
-                ..
-            } => self.update_position(-1, 0),
-            Event::KeyDown {
-                keycode: Some(Keycode::Right),
-                ..
-            } => self.update_position(1, 0),
-
-            _ => {}
-        };
-    }
-}
-
-impl BoxColision for RetanguloChar {
+impl BoxColision for Retangulo {
     fn aabb_collision(&self, rect: (i32, i32, i32, i32)) -> bool {
         if (rect.0 + rect.2) > self.rect.x
             && (self.rect.x + (self.rect.width() as i32)) > rect.0

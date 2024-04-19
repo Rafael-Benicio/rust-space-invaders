@@ -1,11 +1,11 @@
 extern crate sdl2;
 
+use game::base::{bloco::Retangulo, retangulo::RetanguloChar};
+use game::traits::draw_base::BaseDrawFunction;
+use game::{create_window, event_listener};
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
-use game::base::retangulo::{Retangulo, RetanguloChar};
-use game::interface::draw_base::BaseDrawFunction;
-use game::{create_window, event_listener};
 use std::time::Duration;
 
 pub fn main() {
@@ -26,7 +26,7 @@ pub fn main() {
     my_rect_2._set_color(255, 255, 0);
 
     'running: loop {
-        canvas.set_draw_color(Color::RGB(3, 3, 0));
+        canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
 
         my_rect_1.render(&mut canvas);
