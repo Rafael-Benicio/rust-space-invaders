@@ -7,6 +7,7 @@ use sdl2::EventPump;
 use sdl2::VideoSubsystem;
 
 pub mod base;
+pub mod state;
 pub mod traits;
 
 pub fn event_listener(event_pump: &mut EventPump, my_rect: &mut RetanguloChar) -> bool {

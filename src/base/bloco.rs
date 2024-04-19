@@ -18,7 +18,7 @@ impl BaseDrawFunction for Retangulo {
         }
     }
 
-    fn _set_color(&mut self, r: u8, g: u8, b: u8) {
+    fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
 
