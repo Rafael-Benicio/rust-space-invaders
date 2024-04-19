@@ -16,7 +16,7 @@ pub fn main() {
     let video_subsystem: VideoSubsystem = sdl_context.video().unwrap();
     let window: Window =
         create_window("Meu Game", window_width, window_height, &video_subsystem).unwrap();
-    let mut game_state:GameState = GameState::new(window.into_canvas().build().unwrap());
+    let mut game_state: GameState = GameState::new(window.into_canvas().build().unwrap());
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
 

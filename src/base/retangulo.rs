@@ -1,4 +1,5 @@
-use crate::traits::collision::BoxColision;
+use crate::base::collisionbody::CollisionBody;
+use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
 use sdl2::{
@@ -8,12 +9,14 @@ use sdl2::{
 pub struct RetanguloChar {
     rect: Rect,
     color: Color,
+    fisic_body: CollisionBody,
 }
 
 impl BaseDrawFunction for RetanguloChar {
     fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
         RetanguloChar {
             rect: Rect::new(x, y, width, height),
+            fisic_body: CollisionBody::new(x, y, width, height),
             color: Color::RGB(255, 255, 255),
         }
     }
@@ -32,6 +35,7 @@ impl BaseDrawFunction for RetanguloChar {
     fn set_position(&mut self, x: i32, y: i32) {
         self.rect.x = x;
         self.rect.y = y;
+        self.fisic_body.set_position(x, y);
     }
 
     fn update_position(&mut self, x: i32, y: i32) {
@@ -64,23 +68,18 @@ impl Control for RetanguloChar {
     }
 }
 
-impl BoxColision for RetanguloChar {
-    fn aabb_collision(&self, rect: (i32, i32, i32, i32)) -> bool {
-        if (rect.0 + rect.2) > self.rect.x
-            && (self.rect.x + (self.rect.width() as i32)) > rect.0
-            && (rect.1 + rect.3) > self.rect.y
-            && (self.rect.y + (self.rect.height() as i32)) > rect.1
+impl BoxCollision for RetanguloChar {
+    fn aabb_collision(&self, rect: CollisionBody) -> bool {
+        if (rect.right_side()) > self.fisic_body.left_side()
+            && (self.fisic_body.right_side()) > rect.left_side()
+            && (rect.botton_side()) > self.rect.y
+            && (self.fisic_body.botton_side()) > rect.top_side()
         {
             return true;
         }
         false
     }
-    fn collision_box(&self) -> (i32, i32, i32, i32) {
-        (
-            self.rect.x,
-            self.rect.y,
-            self.rect.width() as i32,
-            self.rect.height() as i32,
-        )
+    fn collision_box(&self) -> CollisionBody {
+        self.fisic_body.clone()
     }
 }
