@@ -1,4 +1,4 @@
-use crate::base::retangulo::RetanguloChar;
+use crate::base::player::Player;
 use crate::traits::controler::Control;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
@@ -10,7 +10,7 @@ pub mod base;
 pub mod state;
 pub mod traits;
 
-pub fn event_listener(event_pump: &mut EventPump, my_rect: &mut RetanguloChar) -> bool {
+pub fn event_listener(event_pump: &mut EventPump, my_rect: &mut Player) -> bool {
     for event in event_pump.poll_iter() {
         match event {
             Event::Quit { .. }

@@ -1,6 +1,6 @@
 extern crate sdl2;
 
-use game::base::{bloco::Retangulo, retangulo::RetanguloChar};
+use game::base::{bloco::Retangulo, player::Player};
 use game::state::GameState;
 use game::traits::draw_base::BaseDrawFunction;
 use game::{create_window, event_listener};
@@ -15,12 +15,12 @@ pub fn main() {
     let sdl_context: Sdl = sdl2::init().unwrap();
     let video_subsystem: VideoSubsystem = sdl_context.video().unwrap();
     let window: Window =
-        create_window("Meu Game", window_width, window_height, &video_subsystem).unwrap();
+        create_window("Space Invaders ", window_width, window_height, &video_subsystem).expect("Erro in window creation");
     let mut game_state: GameState = GameState::new(window.into_canvas().build().unwrap());
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
 
-    let mut my_rect_1: RetanguloChar = RetanguloChar::new(50, 50, 50, 50);
+    let mut my_rect_1: Player = Player::new(50, 50, 50, 50);
     let mut my_rect_2: Retangulo = Retangulo::new(250, 250, 50, 50);
     my_rect_1.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);

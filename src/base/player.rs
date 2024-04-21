@@ -6,15 +6,15 @@ use sdl2::{
     event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
 };
 
-pub struct RetanguloChar {
+pub struct Player {
     rect: Rect,
     color: Color,
     fisic_body: CollisionBody,
 }
 
-impl BaseDrawFunction for RetanguloChar {
+impl BaseDrawFunction for Player {
     fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
-        RetanguloChar {
+        Player {
             rect: Rect::new(x, y, width, height),
             fisic_body: CollisionBody::new(x, y, width, height),
             color: Color::RGB(255, 255, 255),
@@ -43,7 +43,7 @@ impl BaseDrawFunction for RetanguloChar {
     }
 }
 
-impl Control for RetanguloChar {
+impl Control for Player {
     fn control(&mut self, event: Event) {
         match event {
             Event::KeyDown {
@@ -68,7 +68,7 @@ impl Control for RetanguloChar {
     }
 }
 
-impl BoxCollision for RetanguloChar {
+impl BoxCollision for Player {
     fn aabb_collision(&self, rect: CollisionBody) -> bool {
         if (rect.right_side()) > self.fisic_body.left_side()
             && (self.fisic_body.right_side()) > rect.left_side()
