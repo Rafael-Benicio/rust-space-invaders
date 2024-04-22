@@ -11,16 +11,22 @@ pub struct Player {
     color: Color,
     fisic_body: CollisionBody,
 }
-
-impl BaseDrawFunction for Player {
-    fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
+impl Player {
+    pub fn new(size: (u32, u32)) -> Self {
         Player {
-            rect: Rect::new(x, y, width, height),
-            fisic_body: CollisionBody::new(x, y, width, height),
+            rect: Rect::new((size.0 * 6) as i32, (size.1 * 14) as i32, size.0, size.1),
+            fisic_body: CollisionBody::new(
+                (size.0 * 6) as i32,
+                (size.1 * 14) as i32,
+                size.0,
+                size.1,
+            ),
             color: Color::RGB(255, 255, 255),
         }
     }
+}
 
+impl BaseDrawFunction for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
@@ -30,16 +36,6 @@ impl BaseDrawFunction for Player {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);
-    }
-
-    fn set_position(&mut self, x: i32, y: i32) {
-        self.rect.x = x;
-        self.rect.y = y;
-        self.fisic_body.set_position(x, y);
-    }
-
-    fn update_position(&mut self, x: i32, y: i32) {
-        self.set_position(self.rect.x + x * 10, self.rect.y + y * 10);
     }
 }
 
@@ -65,6 +61,16 @@ impl Control for Player {
 
             _ => {}
         };
+    }
+
+    fn set_position(&mut self, x: i32, y: i32) {
+        self.rect.x = x;
+        self.rect.y = y;
+        self.fisic_body.set_position(x, y);
+    }
+
+    fn update_position(&mut self, x: i32, y: i32) {
+        self.set_position(self.rect.x + x * 10, self.rect.y + y * 10);
     }
 }
 

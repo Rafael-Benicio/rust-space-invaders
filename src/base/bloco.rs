@@ -12,15 +12,17 @@ pub struct Retangulo {
     fisic_body: CollisionBody,
 }
 
-impl BaseDrawFunction for Retangulo {
-    fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
+impl Retangulo {
+    pub fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
         Retangulo {
             rect: Rect::new(x, y, width, height),
             fisic_body: CollisionBody::new(x, y, width, height),
             color: Color::RGB(255, 255, 255),
         }
     }
+}
 
+impl BaseDrawFunction for Retangulo {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
@@ -30,16 +32,6 @@ impl BaseDrawFunction for Retangulo {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);
-    }
-
-    fn set_position(&mut self, x: i32, y: i32) {
-        self.rect.x = x;
-        self.rect.y = y;
-        self.fisic_body.set_position(x, y);
-    }
-
-    fn update_position(&mut self, x: i32, y: i32) {
-        self.set_position(self.rect.x + x * 10, self.rect.y + y * 10);
     }
 }
 
