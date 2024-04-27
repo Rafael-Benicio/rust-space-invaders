@@ -5,5 +5,5 @@ pub trait Control {
 
     fn set_position(&mut self, x: i32, y: i32);
 
-    fn update_position(&mut self, x: i32, y: i32);
+    fn update(&mut self);
 }

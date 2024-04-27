@@ -1,3 +1,4 @@
+use game::traits::controler::Control;
 extern crate sdl2;
 
 use game::base::{bloco::Retangulo, player::Player};
@@ -43,6 +44,8 @@ pub fn main() {
         if !event_listener(&mut event_pump, &mut my_rect_1) {
             break 'running;
         };
+
+        my_rect_1.update();
 
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
         game_state.window.clear();

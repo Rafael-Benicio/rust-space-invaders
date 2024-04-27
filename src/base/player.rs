@@ -1,8 +1,9 @@
 use crate::base::collisionbody::CollisionBody;
+use crate::base::vector2d::Vector2D;
 use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
-use crate::WINDOW_WIDTH;
+use crate::{FRAME_HATE, WINDOW_WIDTH};
 use sdl2::{
     event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
 };
@@ -12,6 +13,10 @@ pub struct Player {
     color: Color,
     acceleration: u8,
     fisic_body: CollisionBody,
+    max_vel: i32,
+    direction: Vector2D<i32>,
+    momentum: Vector2D<i32>,
+    momentum_frame_counter: i16,
 }
 
 impl Player {
@@ -24,7 +29,11 @@ impl Player {
                 size.0,
                 size.1,
             ),
-            acceleration: 10,
+            direction: Vector2D { x: 0, y: 0 },
+            max_vel: 10,
+            momentum: Vector2D { x: 0, y: 0 },
+            acceleration: 2,
+            momentum_frame_counter: 0,
             color: Color::RGB(255, 255, 255),
         }
     }
@@ -49,11 +58,11 @@ impl Control for Player {
             Event::KeyDown {
                 keycode: Some(Keycode::Left),
                 ..
-            } => self.update_position(-1, 0),
+            } => self.direction.x = -1,
             Event::KeyDown {
                 keycode: Some(Keycode::Right),
                 ..
-            } => self.update_position(1, 0),
+            } => self.direction.x = 1,
 
             _ => {}
         };
@@ -70,8 +79,32 @@ impl Control for Player {
         self.fisic_body.set_position(self.rect.x, 0);
     }
 
-    fn update_position(&mut self, x: i32, _y: i32) {
-        self.set_position(self.rect.x + x * self.acceleration as i32, 0);
+    fn update(&mut self) {
+        let accel = self.direction.x * self.acceleration as i32;
+        self.direction.x = 0;
+        self.momentum.x = accel + self.momentum.x;
+
+        self.momentum.x = if self.momentum.x > self.max_vel {
+            self.max_vel
+        } else if self.momentum.x < -self.max_vel {
+            -self.max_vel
+        } else {
+            self.momentum.x
+        };
+
+        if self.momentum_frame_counter > FRAME_HATE / 6 {
+            let variation = self.momentum.x / 2;
+
+            self.momentum_frame_counter = 0;
+            self.momentum.x = match variation {
+                0 => 0,
+                _ => self.momentum.x - variation,
+            };
+        } else if accel == 0 {
+            self.momentum_frame_counter += 1;
+        }
+
+        self.set_position(self.rect.x + self.momentum.x, 0);
     }
 }
 

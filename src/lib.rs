@@ -12,6 +12,7 @@ pub mod traits;
 
 pub const WINDOW_WIDTH: u32 = 800;
 pub const WINDOW_HEIGHT: u32 = 600;
+pub const FRAME_HATE: i16 = 60;
 
 pub fn event_listener(event_pump: &mut EventPump, my_rect: &mut Player) -> bool {
     for event in event_pump.poll_iter() {
