@@ -2,6 +2,7 @@ use crate::base::collisionbody::CollisionBody;
 use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
+use crate::WINDOW_WIDTH;
 use sdl2::{
     event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
 };
@@ -61,8 +62,8 @@ impl Control for Player {
     fn set_position(&mut self, x: i32, _y: i32) {
         self.rect.x = if x < 0 {
             0
-        } else if x + self.fisic_body.proportions.x as i32 > 800 {
-            800 - self.fisic_body.proportions.x as i32
+        } else if x + self.fisic_body.proportions.x as i32 > WINDOW_WIDTH as i32 {
+            WINDOW_WIDTH as i32 - self.fisic_body.proportions.x as i32
         } else {
             x
         };

@@ -4,15 +4,14 @@ use game::base::{bloco::Retangulo, player::Player};
 use game::state::GameState;
 use game::traits::draw_base::BaseDrawFunction;
 use game::{create_window, event_listener};
+use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
 use std::time::Duration;
 
 pub fn main() {
-    let window_width: u32 = 800;
-    let window_height: u32 = 600;
-    let entity_size: (u32, u32) = (window_width / 13, window_height / 16);
+    let entity_size: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
 
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
@@ -20,8 +19,8 @@ pub fn main() {
         .expect("Erro in VideoSubsystem creation");
     let window: Window = create_window(
         "Space Invaders ",
-        window_width,
-        window_height,
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT,
         &video_subsystem,
     )
     .expect("Erro in window creation");
