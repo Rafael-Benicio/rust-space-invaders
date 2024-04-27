@@ -13,8 +13,11 @@ pub fn main() {
     let window_width: u32 = 800;
     let window_height: u32 = 600;
     let entity_size: (u32, u32) = (window_width / 13, window_height / 16);
-    let sdl_context: Sdl = sdl2::init().unwrap();
-    let video_subsystem: VideoSubsystem = sdl_context.video().unwrap();
+
+    let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
+    let video_subsystem: VideoSubsystem = sdl_context
+        .video()
+        .expect("Erro in VideoSubsystem creation");
     let window: Window = create_window(
         "Space Invaders ",
         window_width,
@@ -22,7 +25,13 @@ pub fn main() {
         &video_subsystem,
     )
     .expect("Erro in window creation");
-    let mut game_state: GameState = GameState::new(window.into_canvas().build().unwrap());
+
+    let mut game_state: GameState = GameState::new(
+        window
+            .into_canvas()
+            .build()
+            .expect("Erro in GameState creation"),
+    );
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
 

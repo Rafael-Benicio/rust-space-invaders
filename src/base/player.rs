@@ -9,8 +9,10 @@ use sdl2::{
 pub struct Player {
     rect: Rect,
     color: Color,
+    acceleration: u8,
     fisic_body: CollisionBody,
 }
+
 impl Player {
     pub fn new(size: (u32, u32)) -> Self {
         Player {
@@ -21,6 +23,7 @@ impl Player {
                 size.0,
                 size.1,
             ),
+            acceleration: 10,
             color: Color::RGB(255, 255, 255),
         }
     }
@@ -43,14 +46,6 @@ impl Control for Player {
     fn control(&mut self, event: Event) {
         match event {
             Event::KeyDown {
-                keycode: Some(Keycode::Up),
-                ..
-            } => self.update_position(0, -1),
-            Event::KeyDown {
-                keycode: Some(Keycode::Down),
-                ..
-            } => self.update_position(0, 1),
-            Event::KeyDown {
                 keycode: Some(Keycode::Left),
                 ..
             } => self.update_position(-1, 0),
@@ -63,14 +58,19 @@ impl Control for Player {
         };
     }
 
-    fn set_position(&mut self, x: i32, y: i32) {
-        self.rect.x = x;
-        self.rect.y = y;
-        self.fisic_body.set_position(x, y);
+    fn set_position(&mut self, x: i32, _y: i32) {
+        self.rect.x = if x < 0 {
+            0
+        } else if x + self.fisic_body.proportions.x as i32 > 800 {
+            800 - self.fisic_body.proportions.x as i32
+        } else {
+            x
+        };
+        self.fisic_body.set_position(self.rect.x, 0);
     }
 
-    fn update_position(&mut self, x: i32, y: i32) {
-        self.set_position(self.rect.x + x * 10, self.rect.y + y * 10);
+    fn update_position(&mut self, x: i32, _y: i32) {
+        self.set_position(self.rect.x + x * self.acceleration as i32, 0);
     }
 }
 
