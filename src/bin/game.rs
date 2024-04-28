@@ -1,9 +1,9 @@
-use game::traits::controler::Control;
 extern crate sdl2;
 
 use game::base::{bloco::Retangulo, player::Player};
 use game::state::GameState;
 use game::traits::draw_base::BaseDrawFunction;
+use game::traits::update::Update;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use sdl2::pixels::Color;

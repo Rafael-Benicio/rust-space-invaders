@@ -1,5 +1,6 @@
 use crate::base::collisionbody::CollisionBody;
 use crate::base::vector2d::Vector2D;
+use crate::traits::update::Update;
 
 use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
@@ -9,7 +10,7 @@ use sdl2::{
 };
 
 pub struct Player {
-    position:Vector2D<i32>,
+    position: Vector2D<i32>,
     rect: Rect,
     color: Color,
     acceleration: u8,
@@ -23,7 +24,7 @@ pub struct Player {
 impl Player {
     pub fn new(size: (u32, u32)) -> Self {
         Player {
-            position:Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
+            position: Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
             rect: Rect::new((size.0 * 6) as i32, (size.1 * 14) as i32, size.0, size.1),
             fisic_body: CollisionBody::new(
                 (size.0 * 6) as i32,
@@ -31,9 +32,9 @@ impl Player {
                 size.0,
                 size.1,
             ),
-            direction: Vector2D::new(0,0),
+            direction: Vector2D::new(0, 0),
             max_vel: 10,
-            momentum: Vector2D::new(0,0),
+            momentum: Vector2D::new(0, 0),
             acceleration: 2,
             momentum_frame_counter: 0,
             color: Color::RGB(255, 255, 255),
@@ -71,20 +72,21 @@ impl Control for Player {
     }
 
     fn set_position(&mut self, x: i32, _y: i32) {
-
         self.position.x = if x < 0 {
-            self.momentum.x-=self.momentum.x;
+            self.momentum.x -= self.momentum.x;
             0
         } else if x + self.fisic_body.proportions.x as i32 > WINDOW_WIDTH as i32 {
-            self.momentum.x-=self.momentum.x;
+            self.momentum.x -= self.momentum.x;
             WINDOW_WIDTH as i32 - self.fisic_body.proportions.x as i32
         } else {
             x
         };
-        self.rect.x=self.position.x;
+        self.rect.x = self.position.x;
         self.fisic_body.set_position(self.position.x, 0);
     }
+}
 
+impl Update for Player {
     fn update(&mut self) {
         let accel = self.direction.x * self.acceleration as i32;
         self.direction.x = 0;

@@ -4,8 +4,8 @@ pub struct Vector2D<T> {
     pub y: T,
 }
 
-impl<T> Vector2D<T>{
-    pub fn new(x:T,y:T)->Vector2D<T>{
-        Vector2D{x:x,y:y}
+impl<T> Vector2D<T> {
+    pub fn new(x: T, y: T) -> Vector2D<T> {
+        Vector2D { x: x, y: y }
     }
 }

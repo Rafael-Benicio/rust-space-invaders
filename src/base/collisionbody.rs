@@ -1,5 +1,5 @@
-use crate::traits::collision::BoxCollision;
 use crate::base::vector2d::Vector2D;
+use crate::traits::collision::BoxCollision;
 
 #[derive(Clone)]
 pub struct CollisionBody {
@@ -40,7 +40,7 @@ impl CollisionBody {
     }
 }
 
-impl BoxCollision for CollisionBody{
+impl BoxCollision for CollisionBody {
     fn aabb_collision(&self, rect: CollisionBody) -> bool {
         if (rect.right_side()) > self.left_side()
             && (self.right_side()) > rect.left_side()
@@ -51,9 +51,8 @@ impl BoxCollision for CollisionBody{
         }
         false
     }
-    
+
     fn collision_box(&self) -> CollisionBody {
         self.clone()
     }
-
 }
