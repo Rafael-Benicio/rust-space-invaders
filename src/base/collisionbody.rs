@@ -5,6 +5,7 @@ use crate::traits::collision::BoxCollision;
 pub struct CollisionBody {
     pub position: Vector2D<i32>,
     pub proportions: Vector2D<u32>,
+    pub is_colliding: bool,
 }
 
 impl CollisionBody {
@@ -15,6 +16,7 @@ impl CollisionBody {
                 x: width,
                 y: height,
             },
+            is_colliding: false,
         }
     }
 
@@ -41,14 +43,16 @@ impl CollisionBody {
 }
 
 impl BoxCollision for CollisionBody {
-    fn aabb_collision(&self, rect: CollisionBody) -> bool {
+    fn aabb_collision(&mut self, rect: CollisionBody) -> bool {
         if (rect.right_side()) > self.left_side()
             && (self.right_side()) > rect.left_side()
             && (rect.botton_side()) > self.top_side()
             && (self.botton_side()) > rect.top_side()
         {
+            self.is_colliding = true;
             return true;
         }
+        self.is_colliding = false;
         false
     }
 

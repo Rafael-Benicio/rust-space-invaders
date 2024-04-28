@@ -1,5 +1,4 @@
 use crate::base::collisionbody::CollisionBody;
-use crate::traits::collision::BoxCollision;
 use crate::traits::draw_base::BaseDrawFunction;
 use crate::Window;
 use sdl2::pixels::Color;
@@ -32,21 +31,5 @@ impl BaseDrawFunction for Retangulo {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);
-    }
-}
-
-impl BoxCollision for Retangulo {
-    fn aabb_collision(&self, rect: CollisionBody) -> bool {
-        if (rect.right_side()) > self.fisic_body.left_side()
-            && (self.fisic_body.right_side()) > rect.left_side()
-            && (rect.botton_side()) > self.rect.y
-            && (self.fisic_body.botton_side()) > rect.top_side()
-        {
-            return true;
-        }
-        false
-    }
-    fn collision_box(&self) -> CollisionBody {
-        self.fisic_body.clone()
     }
 }
