@@ -1,6 +1,6 @@
 use crate::base::collisionbody::CollisionBody;
 use crate::base::vector2d::Vector2D;
-use crate::traits::collision::BoxCollision;
+
 use crate::traits::controler::Control;
 use crate::traits::draw_base::BaseDrawFunction;
 use crate::{FRAME_HATE, WINDOW_WIDTH};
@@ -111,21 +111,5 @@ impl Control for Player {
         }
 
         self.set_position(self.position.x + self.momentum.x, 0);
-    }
-}
-
-impl BoxCollision for Player {
-    fn aabb_collision(&self, rect: CollisionBody) -> bool {
-        if (rect.right_side()) > self.fisic_body.left_side()
-            && (self.fisic_body.right_side()) > rect.left_side()
-            && (rect.botton_side()) > self.rect.y
-            && (self.fisic_body.botton_side()) > rect.top_side()
-        {
-            return true;
-        }
-        false
-    }
-    fn collision_box(&self) -> CollisionBody {
-        self.fisic_body.clone()
     }
 }

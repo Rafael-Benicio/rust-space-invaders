@@ -1,3 +1,4 @@
+use crate::traits::collision::BoxCollision;
 use crate::base::vector2d::Vector2D;
 
 #[derive(Clone)]
@@ -37,4 +38,22 @@ impl CollisionBody {
     pub fn right_side(&self) -> i32 {
         self.position.x + self.proportions.x as i32
     }
+}
+
+impl BoxCollision for CollisionBody{
+    fn aabb_collision(&self, rect: CollisionBody) -> bool {
+        if (rect.right_side()) > self.left_side()
+            && (self.right_side()) > rect.left_side()
+            && (rect.botton_side()) > self.top_side()
+            && (self.botton_side()) > rect.top_side()
+        {
+            return true;
+        }
+        false
+    }
+    
+    fn collision_box(&self) -> CollisionBody {
+        self.clone()
+    }
+
 }
