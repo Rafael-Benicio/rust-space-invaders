@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate impls;
+
+use impls::impls;
 use crate::base::player::Player;
 use crate::traits::controler::Control;
 use sdl2::event::Event;

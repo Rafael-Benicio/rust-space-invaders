@@ -10,3 +10,4 @@ Um Game Rouge Like
 - Fix : Concerta bug/comportamento inesperado e indesejado
 - Docs : Documentação
 - Refact : Reescreve trecho de codigo sem adicionar nada em funcionalidade
+- Build : Adiciona nova dependencia
