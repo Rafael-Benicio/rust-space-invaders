@@ -3,7 +3,7 @@ use crate::base::vector2d::Vector2D;
 use crate::traits::update::Update;
 
 use crate::traits::controler::Control;
-use crate::traits::draw_base::BaseDrawFunction;
+use crate::traits::draw::Draw;
 use crate::{FRAME_HATE, WINDOW_WIDTH};
 use sdl2::{
     event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
@@ -42,7 +42,7 @@ impl Player {
     }
 }
 
-impl BaseDrawFunction for Player {
+impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }

@@ -1,5 +1,5 @@
 use crate::base::collisionbody::CollisionBody;
-use crate::traits::draw_base::BaseDrawFunction;
+use crate::traits::draw::Draw;
 use crate::Window;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
@@ -21,7 +21,7 @@ impl Retangulo {
     }
 }
 
-impl BaseDrawFunction for Retangulo {
+impl Draw for Retangulo {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
