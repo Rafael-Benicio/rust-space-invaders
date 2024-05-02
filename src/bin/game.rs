@@ -1,8 +1,8 @@
 extern crate sdl2;
 
-use game::traits::base_game_flow::BaseGameFlow;
 use game::base::{bloco::Retangulo, player::Player};
 use game::state::GameState;
+use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
@@ -41,23 +41,28 @@ pub fn main() {
     player.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);
 
-    let mut entity_game:LinkedList<Box<dyn BaseGameFlow>>=LinkedList::new();
+    let mut entity_game: LinkedList<Box<dyn BaseGameFlow>> = LinkedList::new();
     entity_game.push_back(Box::new(player));
     entity_game.push_back(Box::new(my_rect_2));
 
     'running: loop {
-        if !event_listener(&mut event_pump, &mut entity_game.front_mut().unwrap()) {
+        if !event_listener(
+            &mut event_pump,
+            &mut entity_game
+                .front_mut()
+                .expect("Erro in get Player register in LinkedList"),
+        ) {
             break 'running;
         };
 
-        for entity in entity_game.iter_mut(){
+        for entity in entity_game.iter_mut() {
             entity.update();
         }
 
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
         game_state.window.clear();
 
-        for entity in entity_game.iter_mut(){
+        for entity in entity_game.iter_mut() {
             entity.render(&mut game_state.window);
         }
 

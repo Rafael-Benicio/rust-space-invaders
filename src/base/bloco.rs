@@ -1,8 +1,8 @@
-use crate::Control;
-use crate::traits::update::Update;
-use crate::BaseGameFlow;
 use crate::base::collisionbody::CollisionBody;
 use crate::traits::draw::Draw;
+use crate::traits::update::Update;
+use crate::BaseGameFlow;
+use crate::Control;
 use crate::Window;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;

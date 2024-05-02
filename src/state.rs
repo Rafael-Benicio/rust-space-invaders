@@ -8,9 +8,6 @@ pub struct GameState {
 
 impl GameState {
     pub fn new(window: Canvas<Window>) -> Self {
-        GameState {
-            run: false,
-            window: window,
-        }
+        GameState { run: false, window }
     }
 }

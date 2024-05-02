@@ -1,5 +1,3 @@
-
-
 use crate::Window;
 use sdl2::render::Canvas;
 

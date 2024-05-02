@@ -27,7 +27,7 @@ pub fn event_listener(event_pump: &mut EventPump, player: &mut Box<dyn BaseGameF
             }
         }
     }
-    return true;
+    true
 }
 
 pub fn create_window(

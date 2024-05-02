@@ -1,6 +1,6 @@
-use crate::traits::base_game_flow::BaseGameFlow;
 use crate::base::collisionbody::CollisionBody;
 use crate::base::vector2d::Vector2D;
+use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::update::Update;
 
 use crate::traits::controler::Control;
@@ -43,7 +43,7 @@ impl Player {
     }
 }
 
-impl BaseGameFlow for Player{}
+impl BaseGameFlow for Player {}
 
 impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
@@ -93,7 +93,7 @@ impl Update for Player {
     fn update(&mut self) {
         let accel = self.direction.x * self.acceleration as i32;
         self.direction.x = 0;
-        self.momentum.x = accel + self.momentum.x;
+        self.momentum.x += accel;
 
         self.momentum.x = if self.momentum.x > self.max_vel {
             self.max_vel

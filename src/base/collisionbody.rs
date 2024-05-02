@@ -11,7 +11,7 @@ pub struct CollisionBody {
 impl CollisionBody {
     pub fn new(x: i32, y: i32, width: u32, height: u32) -> Self {
         CollisionBody {
-            position: Vector2D { x: x, y: y },
+            position: Vector2D { x, y },
             proportions: Vector2D {
                 x: width,
                 y: height,
