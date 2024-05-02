@@ -1,14 +1,15 @@
 extern crate sdl2;
 
+use game::traits::base_game_flow::BaseGameFlow;
 use game::base::{bloco::Retangulo, player::Player};
 use game::state::GameState;
-use game::traits::draw_base::BaseDrawFunction;
-use game::traits::update::Update;
+use game::traits::draw::Draw;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
+use std::collections::LinkedList;
 use std::time::Duration;
 
 pub fn main() {
@@ -35,23 +36,30 @@ pub fn main() {
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
 
-    let mut my_rect_1: Player = Player::new(entity_size);
+    let mut player: Player = Player::new(entity_size);
     let mut my_rect_2: Retangulo = Retangulo::new(250, 250, 50, 50);
-    my_rect_1.set_color(255, 255, 255);
+    player.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);
 
+    let mut entity_game:LinkedList<Box<dyn BaseGameFlow>>=LinkedList::new();
+    entity_game.push_back(Box::new(player));
+    entity_game.push_back(Box::new(my_rect_2));
+
     'running: loop {
-        if !event_listener(&mut event_pump, &mut my_rect_1) {
+        if !event_listener(&mut event_pump, &mut entity_game.front_mut().unwrap()) {
             break 'running;
         };
 
-        my_rect_1.update();
+        for entity in entity_game.iter_mut(){
+            entity.update();
+        }
 
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
         game_state.window.clear();
 
-        my_rect_1.render(&mut game_state.window);
-        my_rect_2.render(&mut game_state.window);
+        for entity in entity_game.iter_mut(){
+            entity.render(&mut game_state.window);
+        }
 
         game_state.window.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

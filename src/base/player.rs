@@ -1,3 +1,4 @@
+use crate::traits::base_game_flow::BaseGameFlow;
 use crate::base::collisionbody::CollisionBody;
 use crate::base::vector2d::Vector2D;
 use crate::traits::update::Update;
@@ -41,6 +42,8 @@ impl Player {
         }
     }
 }
+
+impl BaseGameFlow for Player{}
 
 impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {

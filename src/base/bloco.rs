@@ -1,3 +1,6 @@
+use crate::Control;
+use crate::traits::update::Update;
+use crate::BaseGameFlow;
 use crate::base::collisionbody::CollisionBody;
 use crate::traits::draw::Draw;
 use crate::Window;
@@ -21,6 +24,8 @@ impl Retangulo {
     }
 }
 
+impl BaseGameFlow for Retangulo {}
+
 impl Draw for Retangulo {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
@@ -33,3 +38,7 @@ impl Draw for Retangulo {
         let _ = canvas.fill_rect(self.rect);
     }
 }
+
+impl Update for Retangulo {}
+
+impl Control for Retangulo {}

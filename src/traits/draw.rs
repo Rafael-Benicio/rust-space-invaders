@@ -1,7 +1,10 @@
-use sdl2::{render::Canvas, video::Window};
+
+
+use crate::Window;
+use sdl2::render::Canvas;
 
 pub trait Draw {
-    fn set_color(&mut self, r: u8, g: u8, b: u8);
+    fn set_color(&mut self, _r: u8, _g: u8, _b: u8) {}
 
-    fn render(&self, canvas: &mut Canvas<Window>);
+    fn render(&self, _canvas: &mut Canvas<Window>) {}
 }

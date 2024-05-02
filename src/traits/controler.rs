@@ -1,7 +1,7 @@
 use sdl2::event::Event;
 
 pub trait Control {
-    fn control(&mut self, event: Event);
+    fn control(&mut self, _event: Event) {}
 
-    fn set_position(&mut self, x: i32, y: i32);
+    fn set_position(&mut self, _x: i32, _y: i32) {}
 }
