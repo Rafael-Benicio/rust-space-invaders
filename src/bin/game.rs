@@ -1,14 +1,17 @@
 extern crate sdl2;
 
-use game::base::{bloco::Retangulo, player::Player};
+use game::base::bloco::Retangulo;
+use game::base::player::Player;
 use game::state::GameState;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
+
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
+
 use std::collections::LinkedList;
 use std::time::Duration;
 
@@ -46,12 +49,7 @@ pub fn main() {
     entity_game.push_back(Box::new(my_rect_2));
 
     'running: loop {
-        if !event_listener(
-            &mut event_pump,
-            &mut entity_game
-                .front_mut()
-                .expect("Erro in get Player register in LinkedList"),
-        ) {
+        if !event_listener(&mut event_pump, &mut entity_game) {
             break 'running;
         };
 

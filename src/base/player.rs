@@ -1,17 +1,22 @@
 use crate::base::collisionbody::CollisionBody;
+use crate::base::shoot::Shoot;
 use crate::base::vector2d::Vector2D;
 use crate::traits::base_game_flow::BaseGameFlow;
-use crate::traits::update::Update;
-
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
+use crate::traits::update::Update;
 use crate::{FRAME_HATE, WINDOW_WIDTH};
-use sdl2::{
-    event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
-};
+
+use sdl2::event::{Event, Event::KeyDown};
+use sdl2::keyboard::Keycode;
+use sdl2::pixels::Color;
+use sdl2::rect::Rect;
+use sdl2::render::Canvas;
+use sdl2::video::Window;
 
 pub struct Player {
     position: Vector2D<i32>,
+    proportions: Vector2D<u32>,
     rect: Rect,
     color: Color,
     acceleration: u8,
@@ -26,6 +31,7 @@ impl Player {
     pub fn new(size: (u32, u32)) -> Self {
         Player {
             position: Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
+            proportions: Vector2D::new(size.0, size.1),
             rect: Rect::new((size.0 * 6) as i32, (size.1 * 14) as i32, size.0, size.1),
             fisic_body: CollisionBody::new(
                 (size.0 * 6) as i32,
@@ -40,6 +46,13 @@ impl Player {
             momentum_frame_counter: 0,
             color: Color::RGB(255, 255, 255),
         }
+    }
+
+    fn get_center_point(&self) -> Vector2D<i32> {
+        Vector2D::new(
+            self.position.x + (self.proportions.x as i32 / 2),
+            self.position.y,
+        )
     }
 }
 
@@ -59,19 +72,36 @@ impl Draw for Player {
 }
 
 impl Control for Player {
-    fn control(&mut self, event: Event) {
+    fn control(&mut self, event: Event) -> Option<Shoot> {
         match event {
-            Event::KeyDown {
+            KeyDown {
                 keycode: Some(Keycode::Left),
                 ..
+            }
+            | KeyDown {
+                keycode: Some(Keycode::A),
+                ..
             } => self.direction.x = -1,
-            Event::KeyDown {
+            KeyDown {
                 keycode: Some(Keycode::Right),
                 ..
+            }
+            | KeyDown {
+                keycode: Some(Keycode::D),
+                ..
             } => self.direction.x = 1,
-
+            KeyDown {
+                keycode: Some(Keycode::Return),
+                ..
+            }
+            | KeyDown {
+                keycode: Some(Keycode::Space),
+                ..
+            } => return Some(Shoot::new(self.get_center_point(), true)),
             _ => {}
         };
+
+        None
     }
 
     fn set_position(&mut self, x: i32, _y: i32) {
