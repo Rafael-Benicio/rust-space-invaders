@@ -5,14 +5,16 @@ use game::base::player::Player;
 use game::state::GameState;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
+use game::UpdateComands;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
+
+use uuid::Uuid;
 
 use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
 
-use std::collections::LinkedList;
 use std::time::Duration;
 
 pub fn main() {
@@ -38,27 +40,34 @@ pub fn main() {
     );
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
+    let mut drop_pool: Vec<Uuid> = Vec::new();
 
     let mut player: Player = Player::new(entity_size);
     let mut my_rect_2: Retangulo = Retangulo::new(250, 250, 50, 50);
     player.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);
 
-    let mut entity_game: LinkedList<Box<dyn BaseGameFlow>> = LinkedList::new();
-    entity_game.push_back(Box::new(player));
-    entity_game.push_back(Box::new(my_rect_2));
+    let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
+    entity_game.push(Box::new(player));
+    entity_game.push(Box::new(my_rect_2));
 
     'running: loop {
+        game_state.window.set_draw_color(Color::RGB(0, 0, 0));
+        game_state.window.clear();
+
         if !event_listener(&mut event_pump, &mut entity_game) {
             break 'running;
         };
 
         for entity in entity_game.iter_mut() {
-            entity.update();
+            if let Some(UpdateComands::Remove(val)) = entity.update() {
+                drop_pool.push(val)
+            }
         }
 
-        game_state.window.set_draw_color(Color::RGB(0, 0, 0));
-        game_state.window.clear();
+        entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
+
+        drop_pool.clear();
 
         for entity in entity_game.iter_mut() {
             entity.render(&mut game_state.window);

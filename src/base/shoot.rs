@@ -4,6 +4,9 @@ use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Control;
+use crate::UpdateComands;
+
+use uuid::Uuid;
 
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
@@ -11,6 +14,8 @@ use sdl2::render::Canvas;
 use sdl2::video::Window;
 
 pub struct Shoot {
+    id: Uuid,
+    position: Vector2D<i32>,
     color: Color,
     rect: Rect,
     fisic_body: CollisionBody,
@@ -21,16 +26,28 @@ pub struct Shoot {
 impl Shoot {
     pub fn new(shoot_point: Vector2D<i32>, actor: bool) -> Self {
         Shoot {
+            id: Uuid::new_v4(),
+            position: Vector2D::new(shoot_point.x - 5, shoot_point.y),
             color: Color::RGB(255, 255, 255),
             rect: Rect::new(shoot_point.x - 5, shoot_point.y - 5, 10, 10),
-            fisic_body: CollisionBody::new(shoot_point.x - 5, shoot_point.x - 5, 10, 10),
+            fisic_body: CollisionBody::new(shoot_point.x - 5, shoot_point.y - 5, 10, 10),
             shoot_vel: 10,
             by_player: actor,
         }
     }
 }
 
-impl BaseGameFlow for Shoot {}
+impl Drop for Shoot {
+    fn drop(&mut self) {
+        println!("Shoot está sendo dropado \n → {}", self.id);
+    }
+}
+
+impl BaseGameFlow for Shoot {
+    fn get_id(&self) -> Uuid {
+        self.id
+    }
+}
 
 impl Draw for Shoot {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
@@ -45,15 +62,21 @@ impl Draw for Shoot {
 }
 
 impl Update for Shoot {
-    fn update(&mut self) {
-        let variation = if self.by_player {
+    fn update(&mut self) -> Option<UpdateComands> {
+        self.position.y += if self.by_player {
             -self.shoot_vel
         } else {
             self.shoot_vel
         };
 
-        self.rect.y += variation;
-        self.fisic_body.position.y += variation;
+        self.rect.y = self.position.y;
+        self.fisic_body.position.y = self.position.y;
+
+        if self.fisic_body.position.y < 0 {
+            return Some(UpdateComands::Remove(self.get_id()));
+        }
+
+        None
     }
 }
 

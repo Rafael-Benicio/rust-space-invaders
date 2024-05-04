@@ -5,9 +5,11 @@ use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
+use crate::UpdateComands;
+use crate::Uuid;
 use crate::{FRAME_HATE, WINDOW_WIDTH};
 
-use sdl2::event::{Event, Event::KeyDown};
+use sdl2::event::{Event, Event::KeyDown, Event::KeyUp};
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
@@ -15,6 +17,7 @@ use sdl2::render::Canvas;
 use sdl2::video::Window;
 
 pub struct Player {
+    id: Uuid,
     position: Vector2D<i32>,
     proportions: Vector2D<u32>,
     rect: Rect,
@@ -30,6 +33,7 @@ pub struct Player {
 impl Player {
     pub fn new(size: (u32, u32)) -> Self {
         Player {
+            id: Uuid::new_v4(),
             position: Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
             proportions: Vector2D::new(size.0, size.1),
             rect: Rect::new((size.0 * 6) as i32, (size.1 * 14) as i32, size.0, size.1),
@@ -56,7 +60,11 @@ impl Player {
     }
 }
 
-impl BaseGameFlow for Player {}
+impl BaseGameFlow for Player {
+    fn get_id(&self) -> Uuid {
+        self.id
+    }
+}
 
 impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
@@ -90,6 +98,22 @@ impl Control for Player {
                 keycode: Some(Keycode::D),
                 ..
             } => self.direction.x = 1,
+            KeyUp {
+                keycode: Some(Keycode::Left),
+                ..
+            }
+            | KeyUp {
+                keycode: Some(Keycode::A),
+                ..
+            } => self.direction.x = 0,
+            KeyUp {
+                keycode: Some(Keycode::Right),
+                ..
+            }
+            | KeyUp {
+                keycode: Some(Keycode::D),
+                ..
+            } => self.direction.x = 0,
             KeyDown {
                 keycode: Some(Keycode::Return),
                 ..
@@ -120,9 +144,8 @@ impl Control for Player {
 }
 
 impl Update for Player {
-    fn update(&mut self) {
+    fn update(&mut self) -> Option<UpdateComands> {
         let accel = self.direction.x * self.acceleration as i32;
-        self.direction.x = 0;
         self.momentum.x += accel;
 
         self.momentum.x = if self.momentum.x > self.max_vel {
@@ -146,5 +169,7 @@ impl Update for Player {
         }
 
         self.set_position(self.position.x + self.momentum.x, 0);
+
+        None
     }
 }
