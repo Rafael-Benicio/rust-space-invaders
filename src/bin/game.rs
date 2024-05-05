@@ -1,6 +1,5 @@
 extern crate sdl2;
 
-use game::base::enemy::Enemy;
 use game::base::collisionbody::CollisionBody;
 use game::base::player::Player;
 use game::state::GameState;
@@ -8,8 +7,8 @@ use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::EntityType;
 use game::UpdateComands;
-use game::{create_window, event_listener};
-use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
+use game::{create_window, event_listener, enemys_instance};
+use game::{WINDOW_HEIGHT, WINDOW_WIDTH,ENTITY_SIZE};
 
 use uuid::Uuid;
 
@@ -20,8 +19,6 @@ use sdl2::{Sdl, VideoSubsystem};
 use std::time::Duration;
 
 pub fn main() {
-    let entity_size: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
-
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
         .video()
@@ -44,15 +41,13 @@ pub fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut drop_pool: Vec<Uuid> = Vec::new();
     let mut collision_pool: Vec<(CollisionBody, EntityType)> = Vec::new();
-
-    let mut player: Player = Player::new(entity_size);
-    let mut my_rect_2: Enemy = Enemy::new(entity_size);
-    player.set_color(255, 255, 255);
-    my_rect_2.set_color(255, 255, 0);
-
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
+
+    let mut player: Player = Player::new(ENTITY_SIZE);
+    player.set_color(255, 255, 255);
     entity_game.push(Box::new(player));
-    entity_game.push(Box::new(my_rect_2));
+
+    enemys_instance(&mut entity_game);
 
     'running: loop {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
@@ -79,6 +74,8 @@ pub fn main() {
         }
 
         entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
+
+        println!("{:?}",entity_game.len());
 
         drop_pool.clear();
         collision_pool.clear();

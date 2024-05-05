@@ -22,20 +22,14 @@ pub struct Enemy {
 }
 
 impl Enemy {
-    pub fn new(size: (u32, u32)) -> Self {
+    pub fn new(x :i32,y :i32,size: (u32, u32)) -> Self {
         Enemy {
             id: Uuid::new_v4(),
             entity_type: EntityType::Hostile,
-            rect: Rect::new(size.0 as i32, size.1 as i32, size.0, size.1),
-            fisic_body: CollisionBody::new(size.0 as i32, size.1 as i32, size.0, size.1),
+            rect: Rect::new(size.0 as i32 * x, size.1 as i32 * y, size.0 - 10, size.1 - 10),
+            fisic_body: CollisionBody::new(size.0 as i32 * x, size.1 as i32 * y, size.0 -10, size.1 - 10),
             color: Color::RGB(255, 255, 255),
         }
-    }
-}
-
-impl Drop for Enemy {
-    fn drop(&mut self) {
-        println!("Inimigo dropado");
     }
 }
 

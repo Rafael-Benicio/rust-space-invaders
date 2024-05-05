@@ -39,12 +39,6 @@ impl Shoot {
     }
 }
 
-impl Drop for Shoot {
-    fn drop(&mut self) {
-        println!("Tiro dropado");
-    }
-}
-
 impl BaseGameFlow for Shoot {
     fn get_id(&self) -> Uuid {
         self.id

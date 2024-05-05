@@ -1,3 +1,5 @@
+use crate::traits::draw::Draw;
+use crate::base::enemy::Enemy;
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
 
@@ -16,6 +18,7 @@ pub mod traits;
 pub const WINDOW_WIDTH: u32 = 800;
 pub const WINDOW_HEIGHT: u32 = 600;
 pub const FRAME_HATE: i16 = 60;
+pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
 
 pub enum UpdateComands {
     Remove(Uuid),
@@ -58,4 +61,14 @@ pub fn create_window(
         .window(title, width, height)
         .position_centered()
         .build()
+}
+
+pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>){
+    for pos_x in 1..=11 {
+        for pos_y in 1..=5 {
+            let mut my_rect: Enemy = Enemy::new(pos_x,pos_y,ENTITY_SIZE);
+            my_rect.set_color(pos_x as u8 * 10, pos_y as u8 * 10, 0);
+            entity_game.push(Box::new(my_rect));
+        }
+    }
 }
