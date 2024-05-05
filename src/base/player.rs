@@ -2,9 +2,11 @@ use crate::base::collisionbody::CollisionBody;
 use crate::base::shoot::Shoot;
 use crate::base::vector2d::Vector2D;
 use crate::traits::base_game_flow::BaseGameFlow;
+use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
+use crate::EntityType;
 use crate::UpdateComands;
 use crate::Uuid;
 use crate::{FRAME_HATE, WINDOW_WIDTH};
@@ -18,6 +20,7 @@ use sdl2::video::Window;
 
 pub struct Player {
     id: Uuid,
+    entity_type: EntityType,
     position: Vector2D<i32>,
     proportions: Vector2D<u32>,
     rect: Rect,
@@ -33,6 +36,7 @@ pub struct Player {
 impl Player {
     pub fn new(size: (u32, u32)) -> Self {
         Player {
+            entity_type: EntityType::Friendily,
             id: Uuid::new_v4(),
             position: Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
             proportions: Vector2D::new(size.0, size.1),
@@ -63,6 +67,10 @@ impl Player {
 impl BaseGameFlow for Player {
     fn get_id(&self) -> Uuid {
         self.id
+    }
+
+    fn get_type(&self) -> EntityType {
+        self.entity_type
     }
 }
 
@@ -121,7 +129,7 @@ impl Control for Player {
             | KeyDown {
                 keycode: Some(Keycode::Space),
                 ..
-            } => return Some(Shoot::new(self.get_center_point(), true)),
+            } => return Some(Shoot::new(self.get_center_point(), self.entity_type)),
             _ => {}
         };
 
@@ -170,6 +178,26 @@ impl Update for Player {
 
         self.set_position(self.position.x + self.momentum.x, 0);
 
+        if self.fisic_body.is_colliding {
+            return Some(UpdateComands::Remove(self.get_id()));
+        }
+
         None
+    }
+}
+
+impl BoxCollision for Player {
+    fn aabb_collision(&mut self, rect: &CollisionBody) {
+        if (rect.right_side()) > self.fisic_body.left_side()
+            && (self.fisic_body.right_side()) > rect.left_side()
+            && (rect.botton_side()) > self.fisic_body.top_side()
+            && (self.fisic_body.botton_side()) > rect.top_side()
+        {
+            self.fisic_body.is_colliding = false;
+        }
+    }
+
+    fn collision_box(&self) -> (CollisionBody, EntityType) {
+        (self.fisic_body.clone(), self.entity_type)
     }
 }

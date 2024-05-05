@@ -1,10 +1,12 @@
 extern crate sdl2;
 
 use game::base::bloco::Retangulo;
+use game::base::collisionbody::CollisionBody;
 use game::base::player::Player;
 use game::state::GameState;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
+use game::EntityType;
 use game::UpdateComands;
 use game::{create_window, event_listener};
 use game::{WINDOW_HEIGHT, WINDOW_WIDTH};
@@ -41,9 +43,10 @@ pub fn main() {
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut drop_pool: Vec<Uuid> = Vec::new();
+    let mut collision_pool: Vec<(CollisionBody, EntityType)> = Vec::new();
 
     let mut player: Player = Player::new(entity_size);
-    let mut my_rect_2: Retangulo = Retangulo::new(250, 250, 50, 50);
+    let mut my_rect_2: Retangulo = Retangulo::new(entity_size);
     player.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);
 
@@ -62,12 +65,23 @@ pub fn main() {
         for entity in entity_game.iter_mut() {
             if let Some(UpdateComands::Remove(val)) = entity.update() {
                 drop_pool.push(val)
+            } else {
+                collision_pool.push(entity.collision_box())
+            }
+        }
+
+        for entity in entity_game.iter_mut() {
+            for (colliders, entity_type) in collision_pool.iter() {
+                if entity.get_type() != *entity_type {
+                    entity.aabb_collision(colliders);
+                }
             }
         }
 
         entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
 
         drop_pool.clear();
+        collision_pool.clear();
 
         for entity in entity_game.iter_mut() {
             entity.render(&mut game_state.window);

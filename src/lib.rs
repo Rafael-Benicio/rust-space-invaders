@@ -21,6 +21,12 @@ pub enum UpdateComands {
     Remove(Uuid),
 }
 
+#[derive(PartialEq, Copy, Clone)]
+pub enum EntityType {
+    Hostile,
+    Friendily,
+}
+
 pub fn event_listener(
     event_pump: &mut EventPump,
     entity_game: &mut Vec<Box<dyn BaseGameFlow>>,
