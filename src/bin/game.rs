@@ -1,6 +1,6 @@
 extern crate sdl2;
 
-use game::base::bloco::Retangulo;
+use game::base::enemy::Enemy;
 use game::base::collisionbody::CollisionBody;
 use game::base::player::Player;
 use game::state::GameState;
@@ -46,7 +46,7 @@ pub fn main() {
     let mut collision_pool: Vec<(CollisionBody, EntityType)> = Vec::new();
 
     let mut player: Player = Player::new(entity_size);
-    let mut my_rect_2: Retangulo = Retangulo::new(entity_size);
+    let mut my_rect_2: Enemy = Enemy::new(entity_size);
     player.set_color(255, 255, 255);
     my_rect_2.set_color(255, 255, 0);
 

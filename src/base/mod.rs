@@ -1,4 +1,4 @@
-pub mod bloco;
+pub mod enemy;
 pub mod collisionbody;
 pub mod player;
 pub mod shoot;

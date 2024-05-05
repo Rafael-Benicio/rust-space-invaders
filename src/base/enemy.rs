@@ -13,7 +13,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 
-pub struct Retangulo {
+pub struct Enemy {
     id: Uuid,
     rect: Rect,
     color: Color,
@@ -21,9 +21,9 @@ pub struct Retangulo {
     fisic_body: CollisionBody,
 }
 
-impl Retangulo {
+impl Enemy {
     pub fn new(size: (u32, u32)) -> Self {
-        Retangulo {
+        Enemy {
             id: Uuid::new_v4(),
             entity_type: EntityType::Hostile,
             rect: Rect::new(size.0 as i32, size.1 as i32, size.0, size.1),
@@ -33,13 +33,13 @@ impl Retangulo {
     }
 }
 
-impl Drop for Retangulo {
+impl Drop for Enemy {
     fn drop(&mut self) {
         println!("Inimigo dropado");
     }
 }
 
-impl BaseGameFlow for Retangulo {
+impl BaseGameFlow for Enemy {
     fn get_id(&self) -> Uuid {
         self.id
     }
@@ -49,7 +49,7 @@ impl BaseGameFlow for Retangulo {
     }
 }
 
-impl Draw for Retangulo {
+impl Draw for Enemy {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
@@ -62,7 +62,7 @@ impl Draw for Retangulo {
     }
 }
 
-impl Update for Retangulo {
+impl Update for Enemy {
     fn update(&mut self) -> Option<UpdateComands> {
         if self.fisic_body.is_colliding {
             return Some(UpdateComands::Remove(self.get_id()));
@@ -71,7 +71,7 @@ impl Update for Retangulo {
     }
 }
 
-impl BoxCollision for Retangulo {
+impl BoxCollision for Enemy {
     fn aabb_collision(&mut self, rect: &CollisionBody) {
         if (rect.right_side()) > self.fisic_body.left_side()
             && (self.fisic_body.right_side()) > rect.left_side()
@@ -87,4 +87,4 @@ impl BoxCollision for Retangulo {
     }
 }
 
-impl Control for Retangulo {}
+impl Control for Enemy {}
