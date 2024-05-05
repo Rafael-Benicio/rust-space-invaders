@@ -1,5 +1,6 @@
+use crate::structs::shoot::Shoot;
 use crate::traits::draw::Draw;
-use crate::base::enemy::Enemy;
+use crate::structs::enemy::Enemy;
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
 
@@ -11,7 +12,7 @@ use sdl2::video::{Window, WindowBuildError};
 use sdl2::EventPump;
 use sdl2::VideoSubsystem;
 
-pub mod base;
+pub mod structs;
 pub mod state;
 pub mod traits;
 
@@ -22,6 +23,7 @@ pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
 
 pub enum UpdateComands {
     Remove(Uuid),
+    Shoot(Shoot),
 }
 
 #[derive(PartialEq, Copy, Clone)]

@@ -1,4 +1,4 @@
-use crate::base::vector2d::Vector2D;
+use crate::structs::vector2d::Vector2D;
 
 #[derive(Clone)]
 pub struct CollisionBody {

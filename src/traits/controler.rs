@@ -1,4 +1,4 @@
-use crate::base::shoot::Shoot;
+use crate::structs::shoot::Shoot;
 
 use sdl2::event::Event;
 

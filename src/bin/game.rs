@@ -1,7 +1,8 @@
 extern crate sdl2;
 
-use game::base::collisionbody::CollisionBody;
-use game::base::player::Player;
+use game::structs::shoot::Shoot;
+use game::structs::collisionbody::CollisionBody;
+use game::structs::player::Player;
 use game::state::GameState;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
@@ -41,6 +42,7 @@ pub fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut drop_pool: Vec<Uuid> = Vec::new();
     let mut collision_pool: Vec<(CollisionBody, EntityType)> = Vec::new();
+    let mut shoot_pool: Vec<Shoot> = Vec::new();
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
 
     let mut player: Player = Player::new(ENTITY_SIZE);
@@ -58,11 +60,21 @@ pub fn main() {
         };
 
         for entity in entity_game.iter_mut() {
-            if let Some(UpdateComands::Remove(val)) = entity.update() {
-                drop_pool.push(val)
-            } else {
-                collision_pool.push(entity.collision_box())
-            }
+            match entity.update() {
+                Some(UpdateComands::Remove(id)) => {
+                    drop_pool.push(id)
+                },
+                Some(UpdateComands::Shoot(shoot)) => {
+                    shoot_pool.push(shoot)
+                }, 
+                None => {
+                    collision_pool.push(entity.collision_box())
+                }
+            } 
+        }
+
+        while let Some(shoot) = shoot_pool.pop(){
+            entity_game.push(Box::new(shoot));
         }
 
         for entity in entity_game.iter_mut() {

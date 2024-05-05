@@ -1,5 +1,5 @@
-use crate::base::collisionbody::CollisionBody;
-use crate::base::vector2d::Vector2D;
+use crate::structs::collisionbody::CollisionBody;
+use crate::structs::vector2d::Vector2D;
 use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
@@ -33,7 +33,7 @@ impl Shoot {
             color: Color::RGB(255, 255, 255),
             rect: Rect::new(shoot_point.x - 5, shoot_point.y - 20, 10, 10),
             fisic_body: CollisionBody::new(shoot_point.x - 5, shoot_point.y - 20, 10, 10),
-            shoot_vel: 10,
+            shoot_vel: 5,
             entity_type,
         }
     }

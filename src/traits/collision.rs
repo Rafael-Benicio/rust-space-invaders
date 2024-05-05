@@ -1,4 +1,4 @@
-use crate::base::collisionbody::CollisionBody;
+use crate::structs::collisionbody::CollisionBody;
 use crate::EntityType;
 
 pub trait BoxCollision {

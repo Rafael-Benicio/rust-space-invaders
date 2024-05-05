@@ -1,6 +1,6 @@
-use crate::base::collisionbody::CollisionBody;
-use crate::base::shoot::Shoot;
-use crate::base::vector2d::Vector2D;
+use crate::structs::collisionbody::CollisionBody;
+use crate::structs::shoot::Shoot;
+use crate::structs::vector2d::Vector2D;
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
@@ -193,7 +193,7 @@ impl BoxCollision for Player {
             && (rect.botton_side()) > self.fisic_body.top_side()
             && (self.fisic_body.botton_side()) > rect.top_side()
         {
-            self.fisic_body.is_colliding = false;
+            self.fisic_body.is_colliding = true;
         }
     }
 
