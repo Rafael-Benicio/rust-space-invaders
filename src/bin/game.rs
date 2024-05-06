@@ -1,15 +1,15 @@
 extern crate sdl2;
 
-use game::structs::shoot::Shoot;
+use game::state::GameState;
 use game::structs::collisionbody::CollisionBody;
 use game::structs::player::Player;
-use game::state::GameState;
+use game::structs::shoot::Shoot;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::EntityType;
 use game::UpdateComands;
-use game::{create_window, event_listener, enemys_instance};
-use game::{WINDOW_HEIGHT, WINDOW_WIDTH,ENTITY_SIZE};
+use game::{create_window, enemys_instance, event_listener};
+use game::{ENTITY_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use uuid::Uuid;
 
@@ -61,19 +61,13 @@ pub fn main() {
 
         for entity in entity_game.iter_mut() {
             match entity.update() {
-                Some(UpdateComands::Remove(id)) => {
-                    drop_pool.push(id)
-                },
-                Some(UpdateComands::Shoot(shoot)) => {
-                    shoot_pool.push(shoot)
-                }, 
-                None => {
-                    collision_pool.push(entity.collision_box())
-                }
-            } 
+                Some(UpdateComands::Remove(id)) => drop_pool.push(id),
+                Some(UpdateComands::Shoot(shoot)) => shoot_pool.push(shoot),
+                None => collision_pool.push(entity.collision_box()),
+            }
         }
 
-        while let Some(shoot) = shoot_pool.pop(){
+        while let Some(shoot) = shoot_pool.pop() {
             entity_game.push(Box::new(shoot));
         }
 
@@ -85,9 +79,9 @@ pub fn main() {
             }
         }
 
-        entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
+        println!("{:?}", entity_game.len());
 
-        println!("{:?}",entity_game.len());
+        entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
 
         drop_pool.clear();
         collision_pool.clear();

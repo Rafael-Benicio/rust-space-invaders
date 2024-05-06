@@ -1,8 +1,6 @@
-use rand::Rng;
-use crate::structs::shoot::Shoot;
-use crate::FRAME_HATE;
-use crate::structs::vector2d::Vector2D;
 use crate::structs::collisionbody::CollisionBody;
+use crate::structs::shoot::Shoot;
+use crate::structs::vector2d::Vector2D;
 use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
@@ -12,6 +10,8 @@ use crate::EntityType;
 use crate::UpdateComands;
 use crate::Uuid;
 use crate::Window;
+use crate::FRAME_HATE;
+use rand::Rng;
 
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
@@ -21,38 +21,32 @@ pub struct Enemy {
     id: Uuid,
     rect: Rect,
     color: Color,
-    position:Vector2D<i32>,
-    proportions:Vector2D<u32>,
+    position: Vector2D<i32>,
+    proportions: Vector2D<u32>,
     entity_type: EntityType,
     fisic_body: CollisionBody,
-    shoot_frame_counter:i16,
-    shoot_period:i16, 
+    shoot_frame_counter: i16,
+    shoot_period: i16,
 }
 
 impl Enemy {
-    pub fn new(x :i32,y :i32,size: (u32, u32)) -> Self {
-        let position_x:i32=size.0 as i32 * x;
-        let position_y:i32=size.1 as i32 * y;
+    pub fn new(x: i32, y: i32, size: (u32, u32)) -> Self {
+        let position_x: i32 = size.0 as i32 * x;
+        let position_y: i32 = size.1 as i32 * y;
 
-        let proportions_w:u32=size.0 - 10;
-        let proportions_h:u32=size.1 - 10;
+        let proportions_w: u32 = size.0 - 10;
+        let proportions_h: u32 = size.1 - 10;
 
         Enemy {
             id: Uuid::new_v4(),
             entity_type: EntityType::Hostile,
-            position:Vector2D::new(position_x, position_y),
-            proportions:Vector2D::new(proportions_w,proportions_h),
-            rect: Rect::new(
-                position_x, position_y, 
-                proportions_w, proportions_h
-                ),
-            fisic_body: CollisionBody::new(
-                position_x, position_y, 
-                proportions_w, proportions_h
-                ),
+            position: Vector2D::new(position_x, position_y),
+            proportions: Vector2D::new(proportions_w, proportions_h),
+            rect: Rect::new(position_x, position_y, proportions_w, proportions_h),
+            fisic_body: CollisionBody::new(position_x, position_y, proportions_w, proportions_h),
             color: Color::RGB(255, 255, 255),
-            shoot_frame_counter:0,
-            shoot_period:rand::thread_rng().gen_range(5..15),
+            shoot_frame_counter: 0,
+            shoot_period: rand::thread_rng().gen_range(5..15),
         }
     }
 
@@ -93,17 +87,15 @@ impl Update for Enemy {
             return Some(UpdateComands::Remove(self.get_id()));
         }
 
-        println!("{:?}",(FRAME_HATE * self.shoot_period) );
-
         if FRAME_HATE * self.shoot_period == self.shoot_frame_counter {
-            self.shoot_frame_counter=0;
-            return Some(
-                UpdateComands::Shoot(
-                    Shoot::new(self.get_center_point(), self.entity_type)
-                ));
+            self.shoot_frame_counter = 0;
+            return Some(UpdateComands::Shoot(Shoot::new(
+                self.get_center_point(),
+                self.entity_type,
+            )));
         }
 
-        self.shoot_frame_counter+=1;
+        self.shoot_frame_counter += 1;
 
         None
     }

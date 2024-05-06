@@ -35,18 +35,19 @@ pub struct Player {
 
 impl Player {
     pub fn new(size: (u32, u32)) -> Self {
+        let position_x: i32 = (size.0 * 6) as i32;
+        let position_y: i32 = (size.1 * 14) as i32;
+
+        let proportions_w: u32 = size.0;
+        let proportions_h: u32 = size.1;
+
         Player {
             entity_type: EntityType::Friendily,
             id: Uuid::new_v4(),
-            position: Vector2D::new((size.0 * 6) as i32, (size.1 * 14) as i32),
+            position: Vector2D::new(position_x, position_y),
             proportions: Vector2D::new(size.0, size.1),
-            rect: Rect::new((size.0 * 6) as i32, (size.1 * 14) as i32, size.0, size.1),
-            fisic_body: CollisionBody::new(
-                (size.0 * 6) as i32,
-                (size.1 * 14) as i32,
-                size.0,
-                size.1,
-            ),
+            rect: Rect::new(position_x, position_y, proportions_w, proportions_h),
+            fisic_body: CollisionBody::new(position_x, position_y, proportions_w, proportions_h),
             direction: Vector2D::new(0, 0),
             max_vel: 10,
             momentum: Vector2D::new(0, 0),
@@ -140,9 +141,9 @@ impl Control for Player {
         self.position.x = if x < 0 {
             self.momentum.x -= self.momentum.x;
             0
-        } else if x + self.fisic_body.proportions.x as i32 > WINDOW_WIDTH as i32 {
+        } else if x + self.proportions.x as i32 > WINDOW_WIDTH as i32 {
             self.momentum.x -= self.momentum.x;
-            WINDOW_WIDTH as i32 - self.fisic_body.proportions.x as i32
+            WINDOW_WIDTH as i32 - self.proportions.x as i32
         } else {
             x
         };

@@ -1,8 +1,8 @@
-use crate::structs::shoot::Shoot;
-use crate::traits::draw::Draw;
 use crate::structs::enemy::Enemy;
+use crate::structs::shoot::Shoot;
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
+use crate::traits::draw::Draw;
 
 use uuid::Uuid;
 
@@ -12,8 +12,8 @@ use sdl2::video::{Window, WindowBuildError};
 use sdl2::EventPump;
 use sdl2::VideoSubsystem;
 
-pub mod structs;
 pub mod state;
+pub mod structs;
 pub mod traits;
 
 pub const WINDOW_WIDTH: u32 = 800;
@@ -65,10 +65,10 @@ pub fn create_window(
         .build()
 }
 
-pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>){
+pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>) {
     for pos_x in 1..=11 {
         for pos_y in 1..=5 {
-            let mut my_rect: Enemy = Enemy::new(pos_x,pos_y,ENTITY_SIZE);
+            let mut my_rect: Enemy = Enemy::new(pos_x, pos_y, ENTITY_SIZE);
             my_rect.set_color(pos_x as u8 * 10, pos_y as u8 * 10, 0);
             entity_game.push(Box::new(my_rect));
         }

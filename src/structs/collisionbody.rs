@@ -19,9 +19,8 @@ impl CollisionBody {
         }
     }
 
-    pub fn set_position(&mut self, x: i32, y: i32) {
+    pub fn set_position(&mut self, x: i32, _y: i32) {
         self.position.x = x;
-        self.position.y = y;
     }
 
     pub fn top_side(&self) -> i32 {
