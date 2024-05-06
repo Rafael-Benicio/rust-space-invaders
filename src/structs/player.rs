@@ -9,7 +9,7 @@ use crate::traits::update::Update;
 use crate::EntityType;
 use crate::UpdateComands;
 use crate::Uuid;
-use crate::{FRAME_HATE, WINDOW_WIDTH};
+use crate::WINDOW_WIDTH;
 
 use sdl2::event::{Event, Event::KeyDown, Event::KeyUp};
 use sdl2::keyboard::Keycode;
@@ -27,10 +27,7 @@ pub struct Player {
     color: Color,
     acceleration: u8,
     fisic_body: CollisionBody,
-    max_vel: i32,
     direction: Vector2D<i32>,
-    momentum: Vector2D<i32>,
-    momentum_frame_counter: i16,
 }
 
 impl Player {
@@ -49,10 +46,7 @@ impl Player {
             rect: Rect::new(position_x, position_y, proportions_w, proportions_h),
             fisic_body: CollisionBody::new(position_x, position_y, proportions_w, proportions_h),
             direction: Vector2D::new(0, 0),
-            max_vel: 10,
-            momentum: Vector2D::new(0, 0),
             acceleration: 2,
-            momentum_frame_counter: 0,
             color: Color::RGB(255, 255, 255),
         }
     }
@@ -98,7 +92,9 @@ impl Control for Player {
             | KeyDown {
                 keycode: Some(Keycode::A),
                 ..
-            } => self.direction.x = -1,
+            } => {
+                self.direction.x = -1;
+            }
             KeyDown {
                 keycode: Some(Keycode::Right),
                 ..
@@ -106,23 +102,29 @@ impl Control for Player {
             | KeyDown {
                 keycode: Some(Keycode::D),
                 ..
-            } => self.direction.x = 1,
+            } => {
+                self.direction.x = 1;
+            }
+            KeyDown {
+                keycode: Some(Keycode::RCtrl),
+                ..
+            }
+            | KeyDown {
+                keycode: Some(Keycode::LCtrl),
+                ..
+            } => {
+                self.acceleration = 10;
+            }
             KeyUp {
-                keycode: Some(Keycode::Left),
+                keycode: Some(Keycode::RCtrl),
                 ..
             }
             | KeyUp {
-                keycode: Some(Keycode::A),
+                keycode: Some(Keycode::LCtrl),
                 ..
-            } => self.direction.x = 0,
-            KeyUp {
-                keycode: Some(Keycode::Right),
-                ..
+            } => {
+                self.acceleration = 2;
             }
-            | KeyUp {
-                keycode: Some(Keycode::D),
-                ..
-            } => self.direction.x = 0,
             KeyDown {
                 keycode: Some(Keycode::Return),
                 ..
@@ -130,7 +132,9 @@ impl Control for Player {
             | KeyDown {
                 keycode: Some(Keycode::Space),
                 ..
-            } => return Some(Shoot::new(self.get_center_point(), self.entity_type)),
+            } => {
+                return Some(Shoot::new(self.get_center_point(), self.entity_type));
+            }
             _ => {}
         };
 
@@ -138,46 +142,25 @@ impl Control for Player {
     }
 
     fn set_position(&mut self, x: i32, _y: i32) {
-        self.position.x = if x < 0 {
-            self.momentum.x -= self.momentum.x;
-            0
-        } else if x + self.proportions.x as i32 > WINDOW_WIDTH as i32 {
-            self.momentum.x -= self.momentum.x;
-            WINDOW_WIDTH as i32 - self.proportions.x as i32
-        } else {
-            x
-        };
-        self.rect.x = self.position.x;
-        self.fisic_body.set_position(self.position.x, 0);
+        self.position.x = x;
+        self.rect.x = x;
+        self.fisic_body.set_position(x, 0);
     }
 }
 
 impl Update for Player {
     fn update(&mut self) -> Option<UpdateComands> {
-        let accel = self.direction.x * self.acceleration as i32;
-        self.momentum.x += accel;
+        let mut accel = self.acceleration as i32 * self.direction.x;
 
-        self.momentum.x = if self.momentum.x > self.max_vel {
-            self.max_vel
-        } else if self.momentum.x < -self.max_vel {
-            -self.max_vel
+        accel = if (self.position.x + accel + self.proportions.x as i32) < WINDOW_WIDTH as i32
+            && self.position.x + accel > 0
+        {
+            accel
         } else {
-            self.momentum.x
+            0
         };
 
-        if self.momentum_frame_counter > FRAME_HATE / 6 {
-            let variation = self.momentum.x / 2;
-
-            self.momentum_frame_counter = 0;
-            self.momentum.x = match variation {
-                0 => 0,
-                _ => self.momentum.x - variation,
-            };
-        } else if accel == 0 {
-            self.momentum_frame_counter += 1;
-        }
-
-        self.set_position(self.position.x + self.momentum.x, 0);
+        self.set_position(self.position.x + accel, 0);
 
         if self.fisic_body.is_colliding {
             return Some(UpdateComands::Remove(self.get_id()));

@@ -33,7 +33,7 @@ impl Shoot {
             color: Color::RGB(255, 255, 255),
             rect: Rect::new(shoot_point.x - 5, shoot_point.y - 20, 10, 10),
             fisic_body: CollisionBody::new(shoot_point.x - 5, shoot_point.y - 20, 10, 10),
-            shoot_vel: 5,
+            shoot_vel: 3,
             entity_type,
         }
     }
