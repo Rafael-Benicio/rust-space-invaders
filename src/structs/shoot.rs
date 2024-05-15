@@ -1,3 +1,4 @@
+use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::vector2d::Vector2D;
 use crate::traits::collision::BoxCollision;
@@ -62,7 +63,7 @@ impl Draw for Shoot {
 }
 
 impl Update for Shoot {
-    fn update(&mut self) -> Option<UpdateComands> {
+    fn update(&mut self, _game_state: &GameState) -> Option<UpdateComands> {
         self.position.y += if self.entity_type == EntityType::Friendily {
             -self.shoot_vel
         } else {

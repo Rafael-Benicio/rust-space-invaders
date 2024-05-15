@@ -1,3 +1,4 @@
+use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
 use crate::structs::vector2d::Vector2D;
@@ -149,7 +150,7 @@ impl Control for Player {
 }
 
 impl Update for Player {
-    fn update(&mut self) -> Option<UpdateComands> {
+    fn update(&mut self, _game_state: &GameState) -> Option<UpdateComands> {
         let mut accel = self.acceleration as i32 * self.direction.x;
 
         accel = if (self.position.x + accel + self.proportions.x as i32) < WINDOW_WIDTH as i32

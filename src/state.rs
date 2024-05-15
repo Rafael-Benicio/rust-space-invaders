@@ -4,10 +4,15 @@ use sdl2::video::Window;
 pub struct GameState {
     pub run: bool,
     pub window: Canvas<Window>,
+    pub enemy_movement_direction: i32,
 }
 
 impl GameState {
     pub fn new(window: Canvas<Window>) -> Self {
-        GameState { run: false, window }
+        GameState {
+            run: false,
+            window,
+            enemy_movement_direction: -1,
+        }
     }
 }

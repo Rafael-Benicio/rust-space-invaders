@@ -1,3 +1,4 @@
+use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
 use crate::structs::vector2d::Vector2D;
@@ -11,6 +12,7 @@ use crate::UpdateComands;
 use crate::Uuid;
 use crate::Window;
 use crate::FRAME_HATE;
+use crate::WINDOW_WIDTH;
 use rand::Rng;
 
 use sdl2::pixels::Color;
@@ -26,6 +28,7 @@ pub struct Enemy {
     entity_type: EntityType,
     fisic_body: CollisionBody,
     shoot_frame_counter: i16,
+    move_frame_counter: i16,
     shoot_period: i16,
 }
 
@@ -46,6 +49,7 @@ impl Enemy {
             fisic_body: CollisionBody::new(position_x, position_y, proportions_w, proportions_h),
             color: Color::RGB(255, 255, 255),
             shoot_frame_counter: 0,
+            move_frame_counter: 0,
             shoot_period: rand::thread_rng().gen_range(5..15),
         }
     }
@@ -82,9 +86,19 @@ impl Draw for Enemy {
 }
 
 impl Update for Enemy {
-    fn update(&mut self) -> Option<UpdateComands> {
+    fn update(&mut self, game_state: &GameState) -> Option<UpdateComands> {
         if self.fisic_body.is_colliding {
             return Some(UpdateComands::Remove(self.get_id()));
+        }
+
+        if FRAME_HATE / 2 == self.move_frame_counter {
+            self.move_frame_counter = 0;
+            self.set_position(
+                self.position.x + 10 * game_state.enemy_movement_direction,
+                0,
+            );
+        } else {
+            self.move_frame_counter += 1;
         }
 
         if FRAME_HATE * self.shoot_period == self.shoot_frame_counter {
@@ -93,9 +107,16 @@ impl Update for Enemy {
                 self.get_center_point(),
                 self.entity_type,
             )));
+        } else {
+            self.shoot_frame_counter += 1;
         }
 
-        self.shoot_frame_counter += 1;
+        if (self.position.x + self.proportions.x as i32) > WINDOW_WIDTH as i32 {
+            return Some(UpdateComands::MoveDirection(-1));
+        }
+        if self.position.x < 0 {
+            return Some(UpdateComands::MoveDirection(1));
+        }
 
         None
     }
@@ -117,4 +138,10 @@ impl BoxCollision for Enemy {
     }
 }
 
-impl Control for Enemy {}
+impl Control for Enemy {
+    fn set_position(&mut self, x: i32, _y: i32) {
+        self.position.x = x;
+        self.rect.x = x;
+        self.fisic_body.set_position(x, 0);
+    }
+}

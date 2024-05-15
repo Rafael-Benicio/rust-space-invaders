@@ -44,6 +44,7 @@ pub fn main() {
     let mut collision_pool: Vec<(CollisionBody, EntityType)> = Vec::new();
     let mut shoot_pool: Vec<Shoot> = Vec::new();
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
+    let mut direction_flag: i32 = -1;
 
     let mut player: Player = Player::new(ENTITY_SIZE);
     player.set_color(255, 255, 255);
@@ -60,12 +61,15 @@ pub fn main() {
         };
 
         for entity in entity_game.iter_mut() {
-            match entity.update() {
+            match entity.update(&game_state) {
                 Some(UpdateComands::Remove(id)) => drop_pool.push(id),
                 Some(UpdateComands::Shoot(shoot)) => shoot_pool.push(shoot),
+                Some(UpdateComands::MoveDirection(direction)) => direction_flag = direction,
                 None => collision_pool.push(entity.collision_box()),
             }
         }
+
+        game_state.enemy_movement_direction = direction_flag;
 
         while let Some(shoot) = shoot_pool.pop() {
             entity_game.push(Box::new(shoot));
@@ -78,8 +82,6 @@ pub fn main() {
                 }
             }
         }
-
-        println!("{:?}", entity_game.len());
 
         entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
 

@@ -23,6 +23,7 @@ pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
 
 pub enum UpdateComands {
     Remove(Uuid),
+    MoveDirection(i32),
     Shoot(Shoot),
 }
 
