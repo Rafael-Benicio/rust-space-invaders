@@ -8,6 +8,7 @@ use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Control;
 use crate::EntityType;
+use crate::HostileType;
 use crate::UpdateComands;
 use crate::Uuid;
 use crate::Window;
@@ -42,7 +43,7 @@ impl Enemy {
 
         Enemy {
             id: Uuid::new_v4(),
-            entity_type: EntityType::Hostile,
+            entity_type: EntityType::Hostile(HostileType::Enemy),
             position: Vector2D::new(position_x, position_y),
             proportions: Vector2D::new(proportions_w, proportions_h),
             rect: Rect::new(position_x, position_y, proportions_w, proportions_h),
@@ -105,7 +106,7 @@ impl Update for Enemy {
             self.shoot_frame_counter = 0;
             return Some(UpdateComands::Shoot(Shoot::new(
                 self.get_center_point(),
-                self.entity_type,
+                EntityType::Hostile(HostileType::Shoot),
             )));
         } else {
             self.shoot_frame_counter += 1;
@@ -143,5 +144,11 @@ impl Control for Enemy {
         self.position.x = x;
         self.rect.x = x;
         self.fisic_body.set_position(x, 0);
+    }
+
+    fn go_forward(&mut self, advance: i32) {
+        self.position.y += advance * self.proportions.y as i32;
+        self.rect.y += advance * self.proportions.y as i32;
+        self.fisic_body.position.y += advance * self.proportions.y as i32;
     }
 }

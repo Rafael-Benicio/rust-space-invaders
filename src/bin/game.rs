@@ -7,7 +7,9 @@ use game::structs::shoot::Shoot;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::EntityType;
+use game::HostileType;
 use game::UpdateComands;
+use game::ENTITY_COLUNMS_N;
 use game::{create_window, enemys_instance, event_listener};
 use game::{ENTITY_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH};
 
@@ -45,12 +47,13 @@ pub fn main() {
     let mut shoot_pool: Vec<Shoot> = Vec::new();
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
     let mut direction_flag: i32 = -1;
+    let mut advance_flag_counter = 0;
 
     let mut player: Player = Player::new(ENTITY_SIZE);
     player.set_color(255, 255, 255);
     entity_game.push(Box::new(player));
 
-    enemys_instance(&mut entity_game);
+    game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
     'running: loop {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
@@ -77,13 +80,30 @@ pub fn main() {
 
         for entity in entity_game.iter_mut() {
             for (colliders, entity_type) in collision_pool.iter() {
-                if entity.get_type() != *entity_type {
+                if entity.get_type().diff(entity_type) {
                     entity.aabb_collision(colliders);
                 }
             }
         }
 
-        entity_game.retain(|entity| !drop_pool.contains(&entity.get_id()));
+        entity_game.retain(|entity| {
+            let drop_item: bool = !drop_pool.contains(&entity.get_id());
+            if !drop_item && entity.get_type() == EntityType::Hostile(HostileType::Enemy) {
+                game_state.enemy_kiled += 1;
+            }
+            drop_item
+        });
+
+        if game_state.enemy_kiled % ENTITY_COLUNMS_N == 0
+            && game_state.enemy_kiled != advance_flag_counter
+        {
+            for entity in entity_game.iter_mut() {
+                if entity.get_type() == EntityType::Hostile(HostileType::Enemy) {
+                    advance_flag_counter = game_state.enemy_kiled;
+                    entity.go_forward(1);
+                }
+            }
+        }
 
         drop_pool.clear();
         collision_pool.clear();
