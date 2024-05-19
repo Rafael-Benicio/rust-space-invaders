@@ -10,6 +10,7 @@ use crate::traits::update::Update;
 use crate::EntityType;
 use crate::UpdateComands;
 use crate::Uuid;
+use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
 
 use sdl2::event::{Event, Event::KeyDown, Event::KeyUp};
@@ -29,6 +30,8 @@ pub struct Player {
     acceleration: u8,
     fisic_body: CollisionBody,
     direction: Vector2D<i32>,
+    frame_counter_shoot: i16,
+    can_shoot: bool,
 }
 
 impl Player {
@@ -49,6 +52,8 @@ impl Player {
             direction: Vector2D::new(0, 0),
             acceleration: 2,
             color: Color::RGB(255, 255, 255),
+            frame_counter_shoot: 0,
+            can_shoot: true,
         }
     }
 
@@ -134,7 +139,10 @@ impl Control for Player {
                 keycode: Some(Keycode::Space),
                 ..
             } => {
-                return Some(Shoot::new(self.get_center_point(), self.entity_type));
+                if self.can_shoot {
+                    self.can_shoot=false;
+                    return Some(Shoot::new(self.get_center_point(), self.entity_type));
+                }
             }
             _ => {}
         };
@@ -160,6 +168,13 @@ impl Update for Player {
         } else {
             0
         };
+
+        if FRAME_HATE / 2 == self.frame_counter_shoot {
+            self.can_shoot = true;
+            self.frame_counter_shoot = 0;
+        } else {
+            self.frame_counter_shoot += 1
+        }
 
         self.set_position(self.position.x + accel, 0);
 
