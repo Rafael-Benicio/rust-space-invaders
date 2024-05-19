@@ -1,3 +1,5 @@
+use crate::enums::entity_enum::EntityType;
+use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -7,8 +9,6 @@ use crate::traits::collision::BoxCollision;
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
-use crate::EntityType;
-use crate::UpdateComands;
 use crate::Uuid;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
@@ -140,7 +140,7 @@ impl Control for Player {
                 ..
             } => {
                 if self.can_shoot {
-                    self.can_shoot=false;
+                    self.can_shoot = false;
                     return Some(Shoot::new(self.get_center_point(), self.entity_type));
                 }
             }
@@ -158,7 +158,7 @@ impl Control for Player {
 }
 
 impl Update for Player {
-    fn update(&mut self, _game_state: &GameState) -> Option<UpdateComands> {
+    fn update(&mut self, _game_state: &GameState) -> Option<UpdateCommands> {
         let mut accel = self.acceleration as i32 * self.direction.x;
 
         accel = if (self.position.x + accel + self.proportions.x as i32) < WINDOW_WIDTH as i32
@@ -179,7 +179,7 @@ impl Update for Player {
         self.set_position(self.position.x + accel, 0);
 
         if self.fisic_body.is_colliding {
-            return Some(UpdateComands::Remove(self.get_id()));
+            return Some(UpdateCommands::Remove(self.get_id()));
         }
 
         None

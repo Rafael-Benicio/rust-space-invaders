@@ -1,5 +1,5 @@
+use crate::enums::entity_enum::EntityType;
 use crate::structs::collisionbody::CollisionBody;
-use crate::EntityType;
 
 pub trait BoxCollision {
     fn aabb_collision(&mut self, rect: &CollisionBody);

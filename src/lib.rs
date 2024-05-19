@@ -1,9 +1,8 @@
 use crate::structs::enemy::Enemy;
-use crate::structs::shoot::Shoot;
+
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
-use core::fmt;
 
 use uuid::Uuid;
 
@@ -13,6 +12,7 @@ use sdl2::video::{Window, WindowBuildError};
 use sdl2::EventPump;
 use sdl2::VideoSubsystem;
 
+pub mod enums;
 pub mod state;
 pub mod structs;
 pub mod traits;
@@ -22,49 +22,6 @@ pub const ENTITY_COLUNMS_N: i32 = 11;
 pub const WINDOW_HEIGHT: u32 = 600;
 pub const FRAME_HATE: i16 = 60;
 pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
-
-pub enum UpdateComands {
-    Remove(Uuid),
-    MoveDirection(i32),
-    Shoot(Shoot),
-}
-
-#[derive(PartialEq, Copy, Clone)]
-pub enum HostileType {
-    Enemy,
-    Shoot,
-}
-
-#[derive(PartialEq, Copy, Clone)]
-pub enum EntityType {
-    Hostile(HostileType),
-    Friendily,
-}
-
-impl fmt::Display for EntityType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            EntityType::Hostile(HostileType::Enemy) => write!(f, "Entity-Enemy"),
-            EntityType::Hostile(HostileType::Shoot) => write!(f, "Entity-Shoot"),
-            EntityType::Friendily => write!(f, "Entity-Allay"),
-        }
-    }
-}
-
-impl EntityType {
-    pub fn diff(&self, entity: &EntityType) -> bool {
-        if ((*self == EntityType::Hostile(HostileType::Enemy)
-            || *self == EntityType::Hostile(HostileType::Shoot))
-            && *entity == EntityType::Friendily)
-            || ((*entity == EntityType::Hostile(HostileType::Enemy)
-                || *entity == EntityType::Hostile(HostileType::Shoot))
-                && *self == EntityType::Friendily)
-        {
-            return true;
-        }
-        false
-    }
-}
 
 pub fn event_listener(
     event_pump: &mut EventPump,

@@ -1,3 +1,5 @@
+use crate::enums::entity_enum::EntityType;
+use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::vector2d::Vector2D;
@@ -6,9 +8,6 @@ use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Control;
-use crate::EntityType;
-
-use crate::UpdateComands;
 
 use uuid::Uuid;
 
@@ -64,7 +63,7 @@ impl Draw for Shoot {
 }
 
 impl Update for Shoot {
-    fn update(&mut self, _game_state: &GameState) -> Option<UpdateComands> {
+    fn update(&mut self, _game_state: &GameState) -> Option<UpdateCommands> {
         self.position.y += if self.entity_type == EntityType::Friendily {
             -self.shoot_vel
         } else {
@@ -75,7 +74,7 @@ impl Update for Shoot {
         self.fisic_body.position.y = self.position.y;
 
         if self.fisic_body.position.y < 0 || self.fisic_body.is_colliding {
-            return Some(UpdateComands::Remove(self.get_id()));
+            return Some(UpdateCommands::Remove(self.get_id()));
         }
 
         None

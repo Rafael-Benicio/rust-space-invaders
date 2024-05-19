@@ -1,3 +1,6 @@
+use crate::enums::entity_enum::EntityType;
+use crate::enums::entity_enum::HostileType;
+use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -7,13 +10,11 @@ use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Control;
-use crate::EntityType;
-use crate::HostileType;
-use crate::UpdateComands;
 use crate::Uuid;
 use crate::Window;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
+
 use rand::Rng;
 
 use sdl2::pixels::Color;
@@ -87,9 +88,9 @@ impl Draw for Enemy {
 }
 
 impl Update for Enemy {
-    fn update(&mut self, game_state: &GameState) -> Option<UpdateComands> {
+    fn update(&mut self, game_state: &GameState) -> Option<UpdateCommands> {
         if self.fisic_body.is_colliding {
-            return Some(UpdateComands::Remove(self.get_id()));
+            return Some(UpdateCommands::Remove(self.get_id()));
         }
 
         if FRAME_HATE / 2 == self.move_frame_counter {
@@ -104,7 +105,7 @@ impl Update for Enemy {
 
         if FRAME_HATE * self.shoot_period == self.shoot_frame_counter {
             self.shoot_frame_counter = 0;
-            return Some(UpdateComands::Shoot(Shoot::new(
+            return Some(UpdateCommands::Shoot(Shoot::new(
                 self.get_center_point(),
                 EntityType::Hostile(HostileType::Shoot),
             )));
@@ -113,10 +114,10 @@ impl Update for Enemy {
         }
 
         if (self.position.x + self.proportions.x as i32) > WINDOW_WIDTH as i32 {
-            return Some(UpdateComands::MoveDirection(-1));
+            return Some(UpdateCommands::MoveDirection(-1));
         }
         if self.position.x < 0 {
-            return Some(UpdateComands::MoveDirection(1));
+            return Some(UpdateCommands::MoveDirection(1));
         }
 
         None

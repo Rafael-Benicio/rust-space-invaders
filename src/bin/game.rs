@@ -1,14 +1,14 @@
 extern crate sdl2;
 
+use game::enums::entity_enum::EntityType;
+use game::enums::entity_enum::HostileType;
+use game::enums::update_commands::UpdateCommands;
 use game::state::GameState;
 use game::structs::collisionbody::CollisionBody;
 use game::structs::player::Player;
 use game::structs::shoot::Shoot;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
-use game::EntityType;
-use game::HostileType;
-use game::UpdateComands;
 use game::ENTITY_COLUNMS_N;
 use game::{create_window, enemys_instance, event_listener};
 use game::{ENTITY_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH};
@@ -65,9 +65,9 @@ pub fn main() {
 
         for entity in entity_game.iter_mut() {
             match entity.update(&game_state) {
-                Some(UpdateComands::Remove(id)) => drop_pool.push(id),
-                Some(UpdateComands::Shoot(shoot)) => shoot_pool.push(shoot),
-                Some(UpdateComands::MoveDirection(direction)) => direction_flag = direction,
+                Some(UpdateCommands::Remove(id)) => drop_pool.push(id),
+                Some(UpdateCommands::Shoot(shoot)) => shoot_pool.push(shoot),
+                Some(UpdateCommands::MoveDirection(direction)) => direction_flag = direction,
                 None => collision_pool.push(entity.collision_box()),
             }
         }
