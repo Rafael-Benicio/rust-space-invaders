@@ -1,3 +1,4 @@
+use crate::enums::entity_enum::FriendilyType;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
@@ -43,7 +44,7 @@ impl Player {
         let proportions_h: u32 = size.1;
 
         Player {
-            entity_type: EntityType::Friendily,
+            entity_type: EntityType::Friendily(FriendilyType::Player),
             id: Uuid::new_v4(),
             position: Vector2D::new(position_x, position_y),
             proportions: Vector2D::new(size.0, size.1),
@@ -141,7 +142,7 @@ impl Control for Player {
             } => {
                 if self.can_shoot {
                     self.can_shoot = false;
-                    return Some(Shoot::new(self.get_center_point(), self.entity_type));
+                    return Some(Shoot::new(self.get_center_point(), EntityType::Friendily(FriendilyType::Shoot)));
                 }
             }
             _ => {}

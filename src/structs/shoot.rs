@@ -1,3 +1,4 @@
+use crate::enums::entity_enum::FriendilyType;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
@@ -64,7 +65,7 @@ impl Draw for Shoot {
 
 impl Update for Shoot {
     fn update(&mut self, _game_state: &GameState) -> Option<UpdateCommands> {
-        self.position.y += if self.entity_type == EntityType::Friendily {
+        self.position.y += if self.entity_type == EntityType::Friendily(FriendilyType::Shoot) {
             -self.shoot_vel
         } else {
             self.shoot_vel

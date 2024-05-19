@@ -1,6 +1,7 @@
 extern crate sdl2;
 
 use game::enums::entity_enum::EntityType;
+use game::enums::entity_enum::FriendilyType;
 use game::enums::entity_enum::HostileType;
 use game::enums::update_commands::UpdateCommands;
 use game::state::GameState;
@@ -59,7 +60,7 @@ pub fn main() {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
         game_state.window.clear();
 
-        if !event_listener(&mut event_pump, &mut entity_game) {
+        if !event_listener(&mut event_pump, &mut entity_game) || !game_state.run {
             break 'running;
         };
 
@@ -88,9 +89,18 @@ pub fn main() {
 
         entity_game.retain(|entity| {
             let drop_item: bool = !drop_pool.contains(&entity.get_id());
-            if !drop_item && entity.get_type() == EntityType::Hostile(HostileType::Enemy) {
-                game_state.enemy_kiled += 1;
+            if !drop_item{
+                match entity.get_type() {
+                    EntityType::Hostile(HostileType::Enemy) => {
+                        game_state.enemy_kiled += 1
+                    },
+                    EntityType::Friendily(FriendilyType::Player) => {
+                        game_state.run=false;
+                    },
+                    _ => {}
+                }
             }
+
             drop_item
         });
 

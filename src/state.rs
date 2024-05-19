@@ -12,7 +12,7 @@ pub struct GameState {
 impl GameState {
     pub fn new(window: Canvas<Window>) -> Self {
         GameState {
-            run: false,
+            run: true,
             window,
             enemy_movement_direction: -1,
             enemy_counter: 0,
