@@ -60,10 +60,12 @@ pub fn main() {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
         game_state.window.clear();
 
+        // Input
         if !event_listener(&mut event_pump, &mut entity_game) || !game_state.run {
             break 'running;
         };
 
+        // Update
         for entity in entity_game.iter_mut() {
             match entity.update(&game_state) {
                 Some(UpdateCommands::Remove(id)) => drop_pool.push(id),
@@ -92,7 +94,7 @@ pub fn main() {
             if !drop_item{
                 match entity.get_type() {
                     EntityType::Hostile(HostileType::Enemy) => {
-                        game_state.enemy_kiled += 1
+                        game_state.enemy_killed += 1
                     },
                     EntityType::Friendily(FriendilyType::Player) => {
                         game_state.run=false;
@@ -104,12 +106,12 @@ pub fn main() {
             drop_item
         });
 
-        if game_state.enemy_kiled % ENTITY_COLUNMS_N == 0
-            && game_state.enemy_kiled != advance_flag_counter
+        if game_state.enemy_killed % ENTITY_COLUNMS_N == 0
+            && game_state.enemy_killed != advance_flag_counter
         {
             for entity in entity_game.iter_mut() {
                 if entity.get_type() == EntityType::Hostile(HostileType::Enemy) {
-                    advance_flag_counter = game_state.enemy_kiled;
+                    advance_flag_counter = game_state.enemy_killed;
                     entity.go_forward(1);
                 }
             }

@@ -6,7 +6,7 @@ pub struct GameState {
     pub window: Canvas<Window>,
     pub enemy_movement_direction: i32,
     pub enemy_counter: i32,
-    pub enemy_kiled: i32,
+    pub enemy_killed: i32,
 }
 
 impl GameState {
@@ -16,7 +16,7 @@ impl GameState {
             window,
             enemy_movement_direction: -1,
             enemy_counter: 0,
-            enemy_kiled: 0,
+            enemy_killed: 0,
         }
     }
 }
