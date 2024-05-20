@@ -170,7 +170,7 @@ impl Update for Player {
             0
         };
 
-        if FRAME_HATE / 2 == self.frame_counter_shoot {
+        if FRAME_HATE / 20 == self.frame_counter_shoot {
             self.can_shoot = true;
             self.frame_counter_shoot = 0;
         } else {

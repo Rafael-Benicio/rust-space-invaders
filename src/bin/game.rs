@@ -124,6 +124,12 @@ pub fn main() {
             entity.render(&mut game_state.window);
         }
 
+        if game_state.enemy_counter == game_state.enemy_killed{
+            game_state.level+=1;
+            game_state.enemy_killed=0;
+            game_state.enemy_counter = enemys_instance(&mut entity_game, 4+game_state.level);
+        }
+
         game_state.window.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
