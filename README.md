@@ -1,8 +1,22 @@
-# Projeto Mage
+# Space Invaders
 
-Um Game Rouge Like
+## Run Project
 
-# Tags de Commit
+> Install sdl2
+
+```bash
+sudo apt-get install libsdl2-dev
+
+```
+
+> run project
+
+```bash
+cargo run
+
+```
+
+## Tags de Commit
 
 - Add : Adiciona funcionalidade
 - Style : Adiciona conteudo sem mudar funcionalidades a nivel de codigo
