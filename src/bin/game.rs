@@ -1,3 +1,4 @@
+use crate::sdl2::image::LoadTexture;
 extern crate sdl2;
 
 use game::enums::entity_enum::EntityType;
@@ -20,6 +21,7 @@ use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
 
+use std::path::Path;
 use std::time::Duration;
 
 pub fn main() {
@@ -55,6 +57,12 @@ pub fn main() {
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
+
+    let texture_creator = game_state.window.texture_creator();
+    let texture = match texture_creator.load_texture(Path::new("./ship.png")){
+        Ok(t) => t,
+        Err(_) => panic!("Não conseguiu carregar"),
+    };
 
     'running: loop {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
@@ -129,6 +137,8 @@ pub fn main() {
             game_state.enemy_killed=0;
             game_state.enemy_counter = enemys_instance(&mut entity_game, 4+game_state.level);
         }
+
+        let _ = game_state.window.copy(&texture, None, None);
 
         game_state.window.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

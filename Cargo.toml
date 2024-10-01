@@ -6,7 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sdl2="*"
 impls="1"
 rand="0.8.5"
 
@@ -17,6 +16,11 @@ features = [
     "fast-rng",          # Use a faster (but still sufficiently random) RNG
     "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
 ]
+
+[dependencies.sdl2]
+version = "0.36.0"
+default-features = false
+features = ["image"]
 
 [lib]
 path="src/lib.rs"
