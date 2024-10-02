@@ -22,9 +22,11 @@ use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
 
 use std::path::Path;
+use std::rc::Rc;
 use std::time::Duration;
 
 pub fn main() {
+    let txr_files = [("ship","./src/assets/ship.png")];
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
         .video()
@@ -59,7 +61,7 @@ pub fn main() {
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
     let texture_creator = game_state.window.texture_creator();
-    let texture = match texture_creator.load_texture(Path::new("./src/assets/ship.png")){
+    let texture = match texture_creator.load_texture(Path::new(txr_files[0].1)){
         Ok(t) => t,
         Err(_) => panic!("Não conseguiu carregar"),
     };
