@@ -22,12 +22,12 @@ use sdl2::pixels::Color;
 use sdl2::video::Window;
 use sdl2::{Sdl, VideoSubsystem};
 
+use std::collections::HashMap;
 use std::path::Path;
-use std::rc::Rc;
 use std::time::Duration;
 
 pub fn main() {
-    let txr_files = [("ship","./src/assets/ship.png")];
+    let txr_files = [("ship", "./src/assets/ship.png")];
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
         .video()
@@ -56,20 +56,19 @@ pub fn main() {
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
     let mut direction_flag: i32 = -1;
     let mut advance_flag_counter = 0;
-    let mut texture:Vec<Rc<(String,Texture)>> = vec![]; 
+    let mut texture: HashMap<String, Texture> = Default::default();
 
-    let mut player: Player = Player::new(ENTITY_SIZE);
-    player.set_color(255, 255, 255);
+    let mut player: Player = Player::new(ENTITY_SIZE, txr_files[0].0);
+    player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
-
-    match texture_creator.load_texture(Path::new(txr_files[0].1)){
-        Ok(txr) => {
-            texture.push(Rc::new((txr_files[0].0.to_string(),txr)))
-        },
-        Err(_) => {panic!("Não conseguiu carregar")},
+    match texture_creator.load_texture(Path::new(txr_files[0].1)) {
+        Ok(txr) => texture.insert(txr_files[0].0.to_string(), txr),
+        Err(_) => {
+            panic!("Não conseguiu carregar")
+        }
     };
 
     'running: loop {
@@ -107,14 +106,12 @@ pub fn main() {
 
         entity_game.retain(|entity| {
             let drop_item: bool = !drop_pool.contains(&entity.get_id());
-            if !drop_item{
+            if !drop_item {
                 match entity.get_type() {
-                    EntityType::Hostile(HostileType::Enemy) => {
-                        game_state.enemy_killed += 1
-                    },
+                    EntityType::Hostile(HostileType::Enemy) => game_state.enemy_killed += 1,
                     EntityType::Friendily(FriendilyType::Player) => {
-                        game_state.run=false;
-                    },
+                        game_state.run = false;
+                    }
                     _ => {}
                 }
             }
@@ -137,15 +134,14 @@ pub fn main() {
         collision_pool.clear();
 
         for entity in entity_game.iter_mut() {
-            entity.render(&mut game_state.window);
+            entity.render(&mut game_state.window, &texture);
         }
 
-        if game_state.enemy_counter == game_state.enemy_killed{
-            game_state.level+=1;
-            game_state.enemy_killed=0;
-            game_state.enemy_counter = enemys_instance(&mut entity_game, 4+game_state.level);
+        if game_state.enemy_counter == game_state.enemy_killed {
+            game_state.level += 1;
+            game_state.enemy_killed = 0;
+            game_state.enemy_counter = enemys_instance(&mut entity_game, 4 + game_state.level);
         }
-
 
         game_state.window.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

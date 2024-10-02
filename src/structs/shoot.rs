@@ -1,5 +1,5 @@
-use crate::enums::entity_enum::FriendilyType;
 use crate::enums::entity_enum::EntityType;
+use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
@@ -9,6 +9,8 @@ use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Control;
+use sdl2::render::Texture;
+use std::collections::HashMap;
 
 use uuid::Uuid;
 
@@ -56,7 +58,7 @@ impl Draw for Shoot {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>) {
+    fn render(&self, canvas: &mut Canvas<Window>, _textures: &HashMap<String, Texture>) {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);

@@ -14,6 +14,8 @@ use crate::Uuid;
 use crate::Window;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
+use sdl2::render::Texture;
+use std::collections::HashMap;
 
 use rand::Rng;
 
@@ -79,7 +81,8 @@ impl Draw for Enemy {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>) {
+    fn render(&self, canvas: &mut Canvas<Window>, _textures: &HashMap<String, Texture>) {
+        let _ = _textures;
         // canvas.clear();
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);

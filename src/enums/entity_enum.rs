@@ -1,7 +1,5 @@
 use core::fmt;
 
-
-
 #[derive(PartialEq, Copy, Clone)]
 pub enum HostileType {
     Enemy,

@@ -1,5 +1,5 @@
-use crate::enums::entity_enum::FriendilyType;
 use crate::enums::entity_enum::EntityType;
+use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
@@ -13,6 +13,8 @@ use crate::traits::update::Update;
 use crate::Uuid;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
+use sdl2::render::Texture;
+use std::collections::HashMap;
 
 use sdl2::event::{Event, Event::KeyDown, Event::KeyUp};
 use sdl2::keyboard::Keycode;
@@ -33,10 +35,11 @@ pub struct Player {
     direction: Vector2D<i32>,
     frame_counter_shoot: i16,
     can_shoot: bool,
+    texture_name: String,
 }
 
 impl Player {
-    pub fn new(size: (u32, u32)) -> Self {
+    pub fn new(size: (u32, u32), texture: &str) -> Self {
         let position_x: i32 = (size.0 * 6) as i32;
         let position_y: i32 = (size.1 * 14) as i32;
 
@@ -55,6 +58,7 @@ impl Player {
             color: Color::RGB(255, 255, 255),
             frame_counter_shoot: 0,
             can_shoot: true,
+            texture_name: texture.to_string(),
         }
     }
 
@@ -81,11 +85,16 @@ impl Draw for Player {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>) {
+    fn render(&self, canvas: &mut Canvas<Window>, textures: &HashMap<String, Texture>) {
         // canvas.clear();
         canvas.set_draw_color(self.color);
-        let _ = canvas.draw_rect(self.rect);
-        let _ = canvas.fill_rect(self.rect);
+
+        if let Some(txr) = textures.get(&self.texture_name) {
+            let _ = canvas.copy(txr, None, self.rect);
+        } else {
+            let _ = canvas.draw_rect(self.rect);
+            let _ = canvas.fill_rect(self.rect);
+        }
     }
 }
 
@@ -142,7 +151,10 @@ impl Control for Player {
             } => {
                 if self.can_shoot {
                     self.can_shoot = false;
-                    return Some(Shoot::new(self.get_center_point(), EntityType::Friendily(FriendilyType::Shoot)));
+                    return Some(Shoot::new(
+                        self.get_center_point(),
+                        EntityType::Friendily(FriendilyType::Shoot),
+                    ));
                 }
             }
             _ => {}
