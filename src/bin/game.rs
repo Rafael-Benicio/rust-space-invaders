@@ -59,7 +59,7 @@ pub fn main() {
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
     let texture_creator = game_state.window.texture_creator();
-    let texture = match texture_creator.load_texture(Path::new("./ship.png")){
+    let texture = match texture_creator.load_texture(Path::new("./src/assets/ship.png")){
         Ok(t) => t,
         Err(_) => panic!("Não conseguiu carregar"),
     };
