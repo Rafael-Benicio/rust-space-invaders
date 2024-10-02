@@ -15,6 +15,7 @@ use game::ENTITY_COLUNMS_N;
 use game::{create_window, enemys_instance, event_listener};
 use game::{ENTITY_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH};
 
+use sdl2::render::Texture;
 use uuid::Uuid;
 
 use sdl2::pixels::Color;
@@ -45,6 +46,8 @@ pub fn main() {
             .build()
             .expect("Erro in GameState creation"),
     );
+
+    let texture_creator = game_state.window.texture_creator();
     // -------------------------------------------------------------------------------------
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut drop_pool: Vec<Uuid> = Vec::new();
@@ -53,6 +56,7 @@ pub fn main() {
     let mut entity_game: Vec<Box<dyn BaseGameFlow>> = Vec::new();
     let mut direction_flag: i32 = -1;
     let mut advance_flag_counter = 0;
+    let mut texture:Vec<Rc<(String,Texture)>> = vec![]; 
 
     let mut player: Player = Player::new(ENTITY_SIZE);
     player.set_color(255, 255, 255);
@@ -60,10 +64,12 @@ pub fn main() {
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
-    let texture_creator = game_state.window.texture_creator();
-    let texture = match texture_creator.load_texture(Path::new(txr_files[0].1)){
-        Ok(t) => t,
-        Err(_) => panic!("Não conseguiu carregar"),
+
+    match texture_creator.load_texture(Path::new(txr_files[0].1)){
+        Ok(txr) => {
+            texture.push(Rc::new((txr_files[0].0.to_string(),txr)))
+        },
+        Err(_) => {panic!("Não conseguiu carregar")},
     };
 
     'running: loop {
@@ -140,7 +146,6 @@ pub fn main() {
             game_state.enemy_counter = enemys_instance(&mut entity_game, 4+game_state.level);
         }
 
-        let _ = game_state.window.copy(&texture, None, None);
 
         game_state.window.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
