@@ -27,7 +27,9 @@ use std::path::Path;
 use std::time::Duration;
 
 pub fn main() {
-    let txr_files = [("ship", "./src/assets/ship.png")];
+    let assests_path = "./src/assets/";
+    let txr_files = ["ship.png", "player.png"];
+
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
         .video()
@@ -58,18 +60,21 @@ pub fn main() {
     let mut advance_flag_counter = 0;
     let mut texture: HashMap<String, Texture> = Default::default();
 
-    let mut player: Player = Player::new(ENTITY_SIZE, txr_files[0].0);
+    let mut player: Player = Player::new(ENTITY_SIZE, txr_files[1]);
     player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
-    match texture_creator.load_texture(Path::new(txr_files[0].1)) {
-        Ok(txr) => texture.insert(txr_files[0].0.to_string(), txr),
-        Err(_) => {
-            panic!("Não conseguiu carregar")
-        }
-    };
+    for txr_file in txr_files {
+        let path = format!("{}{}", assests_path, txr_file);
+        match texture_creator.load_texture(Path::new(&path)) {
+            Ok(txr) => texture.insert(txr_file.to_string(), txr),
+            Err(_) => {
+                panic!("Não conseguiu carregar")
+            }
+        };
+    }
 
     'running: loop {
         game_state.window.set_draw_color(Color::RGB(0, 0, 0));
