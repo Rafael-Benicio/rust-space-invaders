@@ -4,6 +4,7 @@ use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 
+use rand::Rng;
 use uuid::Uuid;
 
 use sdl2::event::Event;
@@ -22,6 +23,8 @@ pub const ENTITY_COLUNMS_N: i32 = 11;
 pub const WINDOW_HEIGHT: u32 = 600;
 pub const FRAME_HATE: i16 = 60;
 pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
+pub const ASSETS_PATH: &str = "./src/assets/";
+pub const TEXTURE_FILES: [&str; 2] = ["ship.png", "player.png"];
 
 pub fn event_listener(
     event_pump: &mut EventPump,
@@ -59,12 +62,12 @@ pub fn create_window(
 pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>, n_rows: i32) -> i32 {
     for pos_x in 1..=ENTITY_COLUNMS_N {
         for pos_y in 1..=n_rows {
-            let mut my_rect: Enemy = Enemy::new(pos_x, pos_y, ENTITY_SIZE);
-            my_rect.set_color(
-                (pos_x * 255 / ENTITY_COLUNMS_N) as u8,
-                (pos_y * 255 / n_rows) as u8,
-                0,
-            );
+            let r: u8 = (pos_x * 255 / ENTITY_COLUNMS_N) as u8;
+            let g: u8 = (pos_y * 255 / n_rows) as u8;
+            let b: u8 = ((ENTITY_COLUNMS_N - pos_x) * 255 / ENTITY_COLUNMS_N) as u8;
+
+            let mut my_rect: Enemy = Enemy::new(pos_x, pos_y, ENTITY_SIZE, TEXTURE_FILES[0]);
+            my_rect.set_color(r, g, b);
             entity_game.push(Box::new(my_rect));
         }
     }

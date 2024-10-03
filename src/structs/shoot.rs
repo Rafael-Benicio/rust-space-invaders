@@ -58,7 +58,7 @@ impl Draw for Shoot {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>, _textures: &HashMap<String, Texture>) {
+    fn render(&self, canvas: &mut Canvas<Window>, _textures: &mut HashMap<String, Texture<'_>>) {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);

@@ -34,10 +34,11 @@ pub struct Enemy {
     shoot_frame_counter: i16,
     move_frame_counter: i16,
     shoot_period: i16,
+    texture_name: String,
 }
 
 impl Enemy {
-    pub fn new(x: i32, y: i32, size: (u32, u32)) -> Self {
+    pub fn new(x: i32, y: i32, size: (u32, u32), texture: &str) -> Self {
         let position_x: i32 = size.0 as i32 * x;
         let position_y: i32 = size.1 as i32 * y;
 
@@ -55,6 +56,7 @@ impl Enemy {
             shoot_frame_counter: 0,
             move_frame_counter: 0,
             shoot_period: rand::thread_rng().gen_range(5..15),
+            texture_name: texture.to_string(),
         }
     }
 
@@ -81,12 +83,17 @@ impl Draw for Enemy {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>, _textures: &HashMap<String, Texture>) {
-        let _ = _textures;
+    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture>) {
         // canvas.clear();
-        canvas.set_draw_color(self.color);
-        let _ = canvas.draw_rect(self.rect);
-        let _ = canvas.fill_rect(self.rect);
+
+        if let Some(txr) = textures.get_mut(&self.texture_name) {
+            txr.set_color_mod(self.color.r, self.color.g, self.color.b);
+            let _ = canvas.copy(&txr, None, self.rect);
+        } else {
+            canvas.set_draw_color(self.color);
+            let _ = canvas.draw_rect(self.rect);
+            let _ = canvas.fill_rect(self.rect);
+        }
     }
 }
 

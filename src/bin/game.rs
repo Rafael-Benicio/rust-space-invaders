@@ -13,7 +13,7 @@ use game::traits::base_game_flow::BaseGameFlow;
 use game::traits::draw::Draw;
 use game::ENTITY_COLUNMS_N;
 use game::{create_window, enemys_instance, event_listener};
-use game::{ENTITY_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH};
+use game::{ASSETS_PATH, ENTITY_SIZE, TEXTURE_FILES, WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use sdl2::render::Texture;
 use uuid::Uuid;
@@ -27,9 +27,6 @@ use std::path::Path;
 use std::time::Duration;
 
 pub fn main() {
-    let assests_path = "./src/assets/";
-    let txr_files = ["ship.png", "player.png"];
-
     let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
     let video_subsystem: VideoSubsystem = sdl_context
         .video()
@@ -60,14 +57,14 @@ pub fn main() {
     let mut advance_flag_counter = 0;
     let mut texture: HashMap<String, Texture> = Default::default();
 
-    let mut player: Player = Player::new(ENTITY_SIZE, txr_files[1]);
+    let mut player: Player = Player::new(ENTITY_SIZE, TEXTURE_FILES[1]);
     player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
 
-    for txr_file in txr_files {
-        let path = format!("{}{}", assests_path, txr_file);
+    for txr_file in TEXTURE_FILES {
+        let path = format!("{}{}", ASSETS_PATH, txr_file);
         match texture_creator.load_texture(Path::new(&path)) {
             Ok(txr) => texture.insert(txr_file.to_string(), txr),
             Err(_) => {
@@ -139,7 +136,7 @@ pub fn main() {
         collision_pool.clear();
 
         for entity in entity_game.iter_mut() {
-            entity.render(&mut game_state.window, &texture);
+            entity.render(&mut game_state.window, &mut texture);
         }
 
         if game_state.enemy_counter == game_state.enemy_killed {

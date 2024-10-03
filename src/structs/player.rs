@@ -85,7 +85,7 @@ impl Draw for Player {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>, textures: &HashMap<String, Texture>) {
+    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture<'_>>) {
         // canvas.clear();
         canvas.set_draw_color(self.color);
 
