@@ -35,6 +35,7 @@ pub struct Player {
     direction: Vector2D<i32>,
     frame_counter_shoot: i16,
     can_shoot: bool,
+    can_move:bool,
     texture_name: String,
 }
 
@@ -58,6 +59,7 @@ impl Player {
             color: Color::RGB(255, 255, 255),
             frame_counter_shoot: 0,
             can_shoot: true,
+            can_move:false,
             texture_name: texture.to_string(),
         }
     }
@@ -109,6 +111,7 @@ impl Control for Player {
                 keycode: Some(Keycode::A),
                 ..
             } => {
+                self.can_move=true;
                 self.direction.x = -1;
             }
             KeyDown {
@@ -119,7 +122,28 @@ impl Control for Player {
                 keycode: Some(Keycode::D),
                 ..
             } => {
+                self.can_move=true;
                 self.direction.x = 1;
+            }
+            KeyUp {
+                keycode: Some(Keycode::Left),
+                ..
+            }
+            | KeyUp {
+                keycode: Some(Keycode::A),
+                ..
+            } => {
+                self.can_move=false;
+            }
+            KeyUp {
+                keycode: Some(Keycode::Right),
+                ..
+            }
+            | KeyUp {
+                keycode: Some(Keycode::D),
+                ..
+            } => {
+                self.can_move=false;
             }
             KeyDown {
                 keycode: Some(Keycode::RCtrl),
@@ -172,7 +196,7 @@ impl Control for Player {
 
 impl Update for Player {
     fn update(&mut self, _game_state: &GameState) -> Option<UpdateCommands> {
-        let mut accel = self.acceleration as i32 * self.direction.x;
+        let mut accel = if self.can_move {self.acceleration as i32 * self.direction.x} else {0};
 
         accel = if (self.position.x + accel + self.proportions.x as i32) < WINDOW_WIDTH as i32
             && self.position.x + accel > 0
