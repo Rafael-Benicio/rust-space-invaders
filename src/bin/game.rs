@@ -57,7 +57,7 @@ pub fn main() {
     let mut advance_flag_counter = 0;
     let mut texture: HashMap<String, Texture> = Default::default();
 
-    let mut player: Player = Player::new(ENTITY_SIZE, TEXTURE_FILES[1]);
+    let mut player: Player = Player::new(ENTITY_SIZE, TEXTURE_FILES[0]);
     player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
