@@ -55,7 +55,7 @@ impl Player {
             rect: Rect::new(position_x, position_y, proportions_w, proportions_h),
             fisic_body: CollisionBody::new(position_x, position_y, proportions_w, proportions_h),
             direction: Vector2D::new(0, 0),
-            acceleration: 2,
+            acceleration: 4,
             color: Color::RGB(255, 255, 255),
             frame_counter_shoot: 0,
             can_shoot: true,
@@ -163,7 +163,7 @@ impl Control for Player {
                 keycode: Some(Keycode::LCtrl),
                 ..
             } => {
-                self.acceleration = 2;
+                self.acceleration = 4;
             }
             KeyDown {
                 keycode: Some(Keycode::Return),
@@ -210,7 +210,7 @@ impl Update for Player {
             0
         };
 
-        if FRAME_HATE / 20 == self.frame_counter_shoot {
+        if FRAME_HATE/5 < self.frame_counter_shoot {
             self.can_shoot = true;
             self.frame_counter_shoot = 0;
         } else {
