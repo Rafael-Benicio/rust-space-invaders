@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+use std::path::Path;
+
 use crate::structs::enemy::Enemy;
 
 use crate::traits::base_game_flow::BaseGameFlow;
@@ -5,13 +8,15 @@ use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 
 use rand::Rng;
+use sdl2::image::LoadTexture;
+use sdl2::render::{Canvas, Texture, TextureCreator};
 use uuid::Uuid;
 
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
-use sdl2::video::{Window, WindowBuildError};
-use sdl2::EventPump;
+use sdl2::video::{Window, WindowContext};
 use sdl2::VideoSubsystem;
+use sdl2::{EventPump, Sdl};
 
 pub mod enums;
 pub mod state;
@@ -54,18 +59,6 @@ pub fn event_listener(
     true
 }
 
-pub fn create_window(
-    title: &str,
-    width: u32,
-    height: u32,
-    video_subsystem: &VideoSubsystem,
-) -> Result<Window, WindowBuildError> {
-    video_subsystem
-        .window(title, width, height)
-        .position_centered()
-        .build()
-}
-
 pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>, n_rows: i32) -> i32 {
     for pos_x in 1..=ENTITY_COLUNMS_N {
         for pos_y in 1..=n_rows {
@@ -87,4 +80,46 @@ pub fn enemys_instance(entity_game: &mut Vec<Box<dyn BaseGameFlow>>, n_rows: i32
     }
 
     n_rows * ENTITY_COLUNMS_N
+}
+
+pub fn init_game(
+    title: &str,
+    width: u32,
+    height: u32,
+) -> (EventPump, TextureCreator<WindowContext>, Canvas<Window>) {
+    let sdl_context: Sdl = sdl2::init().expect("Erro in sdl2 init");
+    let video_subsystem: VideoSubsystem = sdl_context
+        .video()
+        .expect("Erro in VideoSubsystem creation");
+
+    let window = video_subsystem
+        .window(title, width, height)
+        .position_centered()
+        .build()
+        .expect("Erro in window creation")
+        .into_canvas()
+        .build()
+        .expect("Erro in GameState creation");
+
+    let event_pump = sdl_context.event_pump().unwrap();
+
+    (event_pump, window.texture_creator(), window)
+}
+
+pub fn load_image<'a>(
+    texture_creator: &'a mut TextureCreator<WindowContext>,
+) -> HashMap<String, Texture<'a>> {
+    let mut texture: HashMap<String, Texture> = Default::default();
+
+    for txr_file in TEXTURE_FILES {
+        let path = format!("{}{}", ASSETS_PATH, txr_file);
+        match texture_creator.load_texture(Path::new(&path)) {
+            Ok(txr) => texture.insert(txr_file.to_string(), txr),
+            Err(_) => {
+                panic!("Não conseguiu carregar")
+            }
+        };
+    }
+
+    texture
 }
