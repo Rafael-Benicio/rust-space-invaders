@@ -123,3 +123,10 @@ pub fn load_image<'a>(
 
     texture
 }
+
+
+#[macro_export] macro_rules! frame_hate {
+    ($a:expr) => {
+        std::thread::sleep(Duration::new(0, 1_000_000_000u32 /$a));
+    };
+}

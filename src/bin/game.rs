@@ -1,3 +1,4 @@
+use game::frame_hate;
 use game::load_image;
 use game::traits::draw::Draw;
 extern crate sdl2;
@@ -43,7 +44,8 @@ pub fn main() {
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
-
+    let fps=60;
+    
     'running: loop {
         window.set_draw_color(Color::RGB(0, 0, 0));
         window.clear();
@@ -117,6 +119,6 @@ pub fn main() {
         }
 
         window.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        frame_hate!(fps);
     }
 }
