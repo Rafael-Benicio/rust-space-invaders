@@ -1,13 +1,13 @@
+use crate::BaseGameFlow;
+use crate::traits::collision::BoxCollision;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::vector2d::Vector2D;
-use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
-use crate::BaseGameFlow;
 use crate::Control;
 use sdl2::render::Texture;
 use std::collections::HashMap;
@@ -19,6 +19,9 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+use space_macros::{BaseGameFlow,BoxCollision};
+
+#[derive(BaseGameFlow,BoxCollision)]
 pub struct Shoot {
     id: Uuid,
     entity_type: EntityType,
@@ -40,16 +43,6 @@ impl Shoot {
             shoot_vel: 3,
             entity_type,
         }
-    }
-}
-
-impl BaseGameFlow for Shoot {
-    fn get_id(&self) -> Uuid {
-        self.id
-    }
-
-    fn get_type(&self) -> EntityType {
-        self.entity_type
     }
 }
 
@@ -85,19 +78,3 @@ impl Update for Shoot {
 }
 
 impl Control for Shoot {}
-
-impl BoxCollision for Shoot {
-    fn aabb_collision(&mut self, rect: &CollisionBody) {
-        if (rect.right_side()) > self.fisic_body.left_side()
-            && (self.fisic_body.right_side()) > rect.left_side()
-            && (rect.botton_side()) > self.fisic_body.top_side()
-            && (self.fisic_body.botton_side()) > rect.top_side()
-        {
-            self.fisic_body.is_colliding = true;
-        }
-    }
-
-    fn collision_box(&self) -> (CollisionBody, EntityType) {
-        (self.fisic_body.clone(), self.entity_type)
-    }
-}

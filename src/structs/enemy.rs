@@ -1,3 +1,5 @@
+use crate::BaseGameFlow;
+use crate::traits::collision::BoxCollision;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::HostileType;
 use crate::enums::update_commands::UpdateCommands;
@@ -5,16 +7,15 @@ use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
 use crate::structs::vector2d::Vector2D;
-use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
-use crate::BaseGameFlow;
 use crate::Control;
 use crate::Uuid;
 use crate::Window;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
 use sdl2::render::Texture;
+use space_macros::{BaseGameFlow,BoxCollision};
 use std::collections::HashMap;
 
 use rand::Rng;
@@ -23,6 +24,8 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 
+
+#[derive(BaseGameFlow,BoxCollision)]
 pub struct Enemy {
     id: Uuid,
     rect: Rect,
@@ -68,15 +71,6 @@ impl Enemy {
     }
 }
 
-impl BaseGameFlow for Enemy {
-    fn get_id(&self) -> Uuid {
-        self.id
-    }
-
-    fn get_type(&self) -> EntityType {
-        self.entity_type
-    }
-}
 
 impl Draw for Enemy {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
@@ -131,22 +125,6 @@ impl Update for Enemy {
         }
 
         None
-    }
-}
-
-impl BoxCollision for Enemy {
-    fn aabb_collision(&mut self, rect: &CollisionBody) {
-        if (rect.right_side()) > self.fisic_body.left_side()
-            && (self.fisic_body.right_side()) > rect.left_side()
-            && (rect.botton_side()) > self.fisic_body.top_side()
-            && (self.fisic_body.botton_side()) > rect.top_side()
-        {
-            self.fisic_body.is_colliding = true;
-        }
-    }
-
-    fn collision_box(&self) -> (CollisionBody, EntityType) {
-        (self.fisic_body.clone(), self.entity_type)
     }
 }
 

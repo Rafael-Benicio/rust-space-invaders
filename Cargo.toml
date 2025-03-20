@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 impls="1"
 rand="0.8.5"
+space_macros = {path="./src/space_macros/"}
 
 [dependencies.uuid]
 version = "1.8.0"

@@ -23,6 +23,9 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+use space_macros::{BoxCollision,BaseGameFlow};
+
+#[derive(BoxCollision,BaseGameFlow)]
 pub struct Player {
     id: Uuid,
     entity_type: EntityType,
@@ -72,15 +75,6 @@ impl Player {
     }
 }
 
-impl BaseGameFlow for Player {
-    fn get_id(&self) -> Uuid {
-        self.id
-    }
-
-    fn get_type(&self) -> EntityType {
-        self.entity_type
-    }
-}
 
 impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
@@ -224,21 +218,5 @@ impl Update for Player {
         }
 
         None
-    }
-}
-
-impl BoxCollision for Player {
-    fn aabb_collision(&mut self, rect: &CollisionBody) {
-        if (rect.right_side()) > self.fisic_body.left_side()
-            && (self.fisic_body.right_side()) > rect.left_side()
-            && (rect.botton_side()) > self.fisic_body.top_side()
-            && (self.fisic_body.botton_side()) > rect.top_side()
-        {
-            self.fisic_body.is_colliding = true;
-        }
-    }
-
-    fn collision_box(&self) -> (CollisionBody, EntityType) {
-        (self.fisic_body.clone(), self.entity_type)
     }
 }
