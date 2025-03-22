@@ -1,3 +1,4 @@
+use crate::Event::KeyDown;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -35,27 +36,6 @@ pub const TEXTURE_FILES: [&str; 6] = [
     "ship_4.png",
     "ship_5.png",
 ];
-
-pub fn event_listener(
-    event_pump: &mut EventPump,
-    entity_game: &mut Vec<Box<dyn BaseGameFlow>>,
-) -> bool {
-    for event in event_pump.poll_iter() {
-        match event {
-            Event::Quit { .. }
-            | Event::KeyDown {
-                keycode: Some(Keycode::Escape),
-                ..
-            } => return false,
-            _ => {
-                if let Some(shoot) = entity_game[0].control(event) {
-                    entity_game.push(Box::new(shoot));
-                }
-            }
-        }
-    }
-    true
-}
 
 pub fn init_game(
     title: &str,

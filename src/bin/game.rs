@@ -8,7 +8,6 @@ use game::enums::entity_enum::EntityType;
 use game::enums::entity_enum::FriendilyType;
 use game::enums::entity_enum::HostileType;
 use game::enums::update_commands::UpdateCommands;
-use game::event_listener;
 use game::init_game;
 use game::state::GameState;
 use game::structs::collisionbody::CollisionBody;
@@ -51,7 +50,7 @@ pub fn main() {
         window.clear();
 
         // Input
-        if !event_listener(&mut event_pump, &mut entity_game) || !game_state.run {
+        if !GameState::event_listener(&mut event_pump, &mut entity_game) || !game_state.run {
             break 'running;
         };
 

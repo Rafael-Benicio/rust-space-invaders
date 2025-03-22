@@ -1,6 +1,11 @@
+use crate::keydown;
 use crate::traits::draw::Draw;
 use crate::BaseGameFlow;
 use crate::Enemy;
+use crate::Event;
+use crate::Event::KeyDown;
+use crate::EventPump;
+use crate::Keycode;
 use crate::ENTITY_COLUNMS_N;
 use crate::ENTITY_SIZE;
 use crate::TEXTURE_FILES;
@@ -48,5 +53,22 @@ impl GameState {
         }
 
         n_rows * ENTITY_COLUNMS_N
+    }
+
+    pub fn event_listener(
+        event_pump: &mut EventPump,
+        entity_game: &mut Vec<Box<dyn BaseGameFlow>>,
+    ) -> bool {
+        for event in event_pump.poll_iter() {
+            match event {
+                Event::Quit { .. } | keydown!(Keycode::Escape) => return false,
+                _ => {
+                    if let Some(shoot) = entity_game[0].control(event) {
+                        entity_game.push(Box::new(shoot));
+                    }
+                }
+            }
+        }
+        true
     }
 }
