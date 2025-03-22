@@ -2,6 +2,8 @@ use crate::draw_simple_rect_image;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
+use crate::keydown;
+use crate::keyup;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -101,76 +103,27 @@ impl Draw for Player {
 impl Control for Player {
     fn control(&mut self, event: Event) -> Option<Shoot> {
         match event {
-            KeyDown {
-                keycode: Some(Keycode::Left),
-                ..
+            keyup!(Keycode::Left) | keyup!(Keycode::A) => {
+                self.can_move = false;
             }
-            | KeyDown {
-                keycode: Some(Keycode::A),
-                ..
-            } => {
+            keyup!(Keycode::Right) | keyup!(Keycode::D) => {
+                self.can_move = false;
+            }
+            keyup!(Keycode::RCtrl) | keyup!(Keycode::LCtrl) => {
+                self.acceleration = 4;
+            }
+            keydown!(Keycode::Left) | keydown!(Keycode::A) => {
                 self.can_move = true;
                 self.direction.x = -1;
             }
-            KeyDown {
-                keycode: Some(Keycode::Right),
-                ..
-            }
-            | KeyDown {
-                keycode: Some(Keycode::D),
-                ..
-            } => {
+            keydown!(Keycode::Right) | keydown!(Keycode::D) => {
                 self.can_move = true;
                 self.direction.x = 1;
             }
-            KeyUp {
-                keycode: Some(Keycode::Left),
-                ..
-            }
-            | KeyUp {
-                keycode: Some(Keycode::A),
-                ..
-            } => {
-                self.can_move = false;
-            }
-            KeyUp {
-                keycode: Some(Keycode::Right),
-                ..
-            }
-            | KeyUp {
-                keycode: Some(Keycode::D),
-                ..
-            } => {
-                self.can_move = false;
-            }
-            KeyDown {
-                keycode: Some(Keycode::RCtrl),
-                ..
-            }
-            | KeyDown {
-                keycode: Some(Keycode::LCtrl),
-                ..
-            } => {
+            keydown!(Keycode::LCtrl) | keydown!(Keycode::RCtrl) => {
                 self.acceleration = 10;
             }
-            KeyUp {
-                keycode: Some(Keycode::RCtrl),
-                ..
-            }
-            | KeyUp {
-                keycode: Some(Keycode::LCtrl),
-                ..
-            } => {
-                self.acceleration = 4;
-            }
-            KeyDown {
-                keycode: Some(Keycode::Return),
-                ..
-            }
-            | KeyDown {
-                keycode: Some(Keycode::Space),
-                ..
-            } => {
+            keydown!(Keycode::Space) | keydown!(Keycode::Return) => {
                 if self.can_shoot {
                     self.can_shoot = false;
                     return Some(Shoot::new(

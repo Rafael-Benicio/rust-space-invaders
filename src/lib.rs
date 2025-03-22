@@ -5,9 +5,7 @@ use crate::structs::enemy::Enemy;
 
 use crate::traits::base_game_flow::BaseGameFlow;
 use crate::traits::controler::Control;
-use crate::traits::draw::Draw;
 
-use rand::Rng;
 use sdl2::image::LoadTexture;
 use sdl2::render::{Canvas, Texture, TextureCreator};
 use uuid::Uuid;
@@ -138,4 +136,24 @@ macro_rules! draw_simple_rect {
         let _ = $canvas.draw_rect(*$self.get_draw_rect());
         let _ = $canvas.fill_rect(*$self.get_draw_rect());
     }};
+}
+
+#[macro_export]
+macro_rules! keydown {
+    ($key:pat) => {
+        KeyDown {
+            keycode: Some($key),
+            ..
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! keyup {
+    ($key:pat) => {
+        KeyUp {
+            keycode: Some($key),
+            ..
+        }
+    };
 }
