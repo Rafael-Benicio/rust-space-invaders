@@ -1,21 +1,22 @@
-use crate::BaseGameFlow;
-use crate::traits::collision::BoxCollision;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::HostileType;
 use crate::enums::update_commands::UpdateCommands;
+use crate::simple_rect_image;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
 use crate::structs::vector2d::Vector2D;
+use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
+use crate::BaseGameFlow;
 use crate::Control;
 use crate::Uuid;
 use crate::Window;
 use crate::FRAME_HATE;
 use crate::WINDOW_WIDTH;
 use sdl2::render::Texture;
-use space_macros::{BaseGameFlow,BoxCollision};
+use space_macros::{BaseGameFlow, BoxCollision};
 use std::collections::HashMap;
 
 use rand::Rng;
@@ -24,8 +25,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 
-
-#[derive(BaseGameFlow,BoxCollision)]
+#[derive(BaseGameFlow, BoxCollision)]
 pub struct Enemy {
     id: Uuid,
     rect: Rect,
@@ -71,23 +71,25 @@ impl Enemy {
     }
 }
 
-
 impl Draw for Enemy {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture>) {
-        // canvas.clear();
+    fn get_color(&self) -> Color {
+        self.color
+    }
 
-        if let Some(txr) = textures.get_mut(&self.texture_name) {
-            txr.set_color_mod(self.color.r, self.color.g, self.color.b);
-            let _ = canvas.copy(&txr, None, self.rect);
-        } else {
-            canvas.set_draw_color(self.color);
-            let _ = canvas.draw_rect(self.rect);
-            let _ = canvas.fill_rect(self.rect);
-        }
+    fn get_draw_rect(&self) -> &Rect {
+        &self.rect
+    }
+
+    fn get_texture_name(&self) -> Option<&String> {
+        Some(&self.texture_name)
+    }
+
+    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture>) {
+        simple_rect_image!(canvas, textures, self)
     }
 }
 

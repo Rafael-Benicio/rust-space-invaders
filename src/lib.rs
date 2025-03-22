@@ -124,9 +124,28 @@ pub fn load_image<'a>(
     texture
 }
 
-
-#[macro_export] macro_rules! frame_hate {
+#[macro_export]
+macro_rules! frame_hate {
     ($a:expr) => {
-        std::thread::sleep(Duration::new(0, 1_000_000_000u32 /$a));
+        std::thread::sleep(Duration::new(0, 1_000_000_000u32 / $a));
+    };
+}
+
+#[macro_export]
+macro_rules! simple_rect_image {
+    ($canvas:expr,$txt_map:expr,$self:expr) => {
+        if let Some(txr) = $txt_map.get_mut($self.get_texture_name().unwrap_or(&"N/A".to_string()))
+        {
+            txr.set_color_mod(
+                $self.get_color().r,
+                $self.get_color().g,
+                $self.get_color().b,
+            );
+            let _ = $canvas.copy(&txr, None, *$self.get_draw_rect());
+        } else {
+            $canvas.set_draw_color($self.get_color());
+            let _ = $canvas.draw_rect(*$self.get_draw_rect());
+            let _ = $canvas.fill_rect(*$self.get_draw_rect());
+        }
     };
 }

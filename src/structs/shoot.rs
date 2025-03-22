@@ -1,13 +1,13 @@
-use crate::BaseGameFlow;
-use crate::traits::collision::BoxCollision;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::vector2d::Vector2D;
+use crate::traits::collision::BoxCollision;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
+use crate::BaseGameFlow;
 use crate::Control;
 use sdl2::render::Texture;
 use std::collections::HashMap;
@@ -19,9 +19,9 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
-use space_macros::{BaseGameFlow,BoxCollision};
+use space_macros::{BaseGameFlow, BoxCollision};
 
-#[derive(BaseGameFlow,BoxCollision)]
+#[derive(BaseGameFlow, BoxCollision)]
 pub struct Shoot {
     id: Uuid,
     entity_type: EntityType,
@@ -55,6 +55,10 @@ impl Draw for Shoot {
         canvas.set_draw_color(self.color);
         let _ = canvas.draw_rect(self.rect);
         let _ = canvas.fill_rect(self.rect);
+    }
+
+    fn get_draw_rect(&self) -> &Rect {
+        &self.rect
     }
 }
 

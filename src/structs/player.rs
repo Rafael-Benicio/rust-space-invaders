@@ -1,6 +1,7 @@
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
+use crate::simple_rect_image;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -23,9 +24,9 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
-use space_macros::{BoxCollision,BaseGameFlow};
+use space_macros::{BaseGameFlow, BoxCollision};
 
-#[derive(BoxCollision,BaseGameFlow)]
+#[derive(BoxCollision, BaseGameFlow)]
 pub struct Player {
     id: Uuid,
     entity_type: EntityType,
@@ -75,22 +76,25 @@ impl Player {
     }
 }
 
-
 impl Draw for Player {
     fn set_color(&mut self, r: u8, g: u8, b: u8) {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture<'_>>) {
-        // canvas.clear();
-        canvas.set_draw_color(self.color);
+    fn get_draw_rect(&self) -> &Rect {
+        &self.rect
+    }
 
-        if let Some(txr) = textures.get(&self.texture_name) {
-            let _ = canvas.copy(txr, None, self.rect);
-        } else {
-            let _ = canvas.draw_rect(self.rect);
-            let _ = canvas.fill_rect(self.rect);
-        }
+    fn get_color(&self) -> Color {
+        self.color
+    }
+
+    fn get_texture_name(&self) -> Option<&String> {
+        Some(&self.texture_name)
+    }
+
+    fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture<'_>>) {
+        simple_rect_image!(canvas, textures, self);
     }
 }
 
