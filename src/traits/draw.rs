@@ -10,13 +10,8 @@ use sdl2::render::Texture;
 pub trait Draw {
     fn set_color(&mut self, _r: u8, _g: u8, _b: u8) {}
 
-    fn get_color(&self) -> Color {
-        Color {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: u8::MAX,
-        }
+    fn get_color(&self) -> Option<Color> {
+        None
     }
 
     fn get_texture_name(&self) -> Option<&String> {
@@ -24,6 +19,6 @@ pub trait Draw {
     }
 
     fn get_draw_rect(&self) -> &Rect;
-    
+
     fn render(&self, _canvas: &mut Canvas<Window>, _textures: &mut HashMap<String, Texture>) {}
 }

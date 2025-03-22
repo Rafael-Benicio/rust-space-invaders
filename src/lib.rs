@@ -132,20 +132,24 @@ macro_rules! frame_hate {
 }
 
 #[macro_export]
-macro_rules! simple_rect_image {
-    ($canvas:expr,$txt_map:expr,$self:expr) => {
-        if let Some(txr) = $txt_map.get_mut($self.get_texture_name().unwrap_or(&"N/A".to_string()))
-        {
-            txr.set_color_mod(
-                $self.get_color().r,
-                $self.get_color().g,
-                $self.get_color().b,
-            );
-            let _ = $canvas.copy(&txr, None, *$self.get_draw_rect());
+macro_rules! draw_simple_rect_image {
+    ($canvas:expr,$txt_map:expr,$self:expr) => {{
+        let color = $self.get_color().unwrap_or(Color {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: u8::MAX,
+        });
+
+        if let Some(txt_name) = $self.get_texture_name() {
+            if let Some(txr) = $txt_map.get_mut(txt_name) {
+                txr.set_color_mod(color.r, color.g, color.b);
+                let _ = $canvas.copy(&txr, None, *$self.get_draw_rect());
+            }
         } else {
-            $canvas.set_draw_color($self.get_color());
+            $canvas.set_draw_color(color);
             let _ = $canvas.draw_rect(*$self.get_draw_rect());
             let _ = $canvas.fill_rect(*$self.get_draw_rect());
         }
-    };
+    }};
 }

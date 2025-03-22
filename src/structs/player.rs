@@ -1,7 +1,7 @@
+use crate::draw_simple_rect_image;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
-use crate::simple_rect_image;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -85,8 +85,8 @@ impl Draw for Player {
         &self.rect
     }
 
-    fn get_color(&self) -> Color {
-        self.color
+    fn get_color(&self) -> Option<Color> {
+        Some(self.color)
     }
 
     fn get_texture_name(&self) -> Option<&String> {
@@ -94,7 +94,7 @@ impl Draw for Player {
     }
 
     fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture<'_>>) {
-        simple_rect_image!(canvas, textures, self);
+        draw_simple_rect_image!(canvas, textures, self);
     }
 }
 

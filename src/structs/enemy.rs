@@ -1,7 +1,7 @@
+use crate::draw_simple_rect_image;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::HostileType;
 use crate::enums::update_commands::UpdateCommands;
-use crate::simple_rect_image;
 use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::shoot::Shoot;
@@ -76,8 +76,8 @@ impl Draw for Enemy {
         self.color = Color::RGB(r, g, b)
     }
 
-    fn get_color(&self) -> Color {
-        self.color
+    fn get_color(&self) -> Option<Color> {
+        Some(self.color)
     }
 
     fn get_draw_rect(&self) -> &Rect {
@@ -89,7 +89,7 @@ impl Draw for Enemy {
     }
 
     fn render(&self, canvas: &mut Canvas<Window>, textures: &mut HashMap<String, Texture>) {
-        simple_rect_image!(canvas, textures, self)
+        draw_simple_rect_image!(canvas, textures, self)
     }
 }
 
