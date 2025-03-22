@@ -39,13 +39,13 @@ pub fn main() {
     let mut advance_flag_counter = 0;
 
     let mut player: Player = Player::new(ENTITY_SIZE, TEXTURE_FILES[0]);
-    
+
     player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
     game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
-    let fps=60;
-    
+    let fps = 60;
+
     'running: loop {
         window.set_draw_color(Color::RGB(0, 0, 0));
         window.clear();

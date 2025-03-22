@@ -1,3 +1,4 @@
+use crate::draw_simple_rect;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
 use crate::enums::update_commands::UpdateCommands;
@@ -52,9 +53,7 @@ impl Draw for Shoot {
     }
 
     fn render(&self, canvas: &mut Canvas<Window>, _textures: &mut HashMap<String, Texture<'_>>) {
-        canvas.set_draw_color(self.color);
-        let _ = canvas.draw_rect(self.rect);
-        let _ = canvas.fill_rect(self.rect);
+        draw_simple_rect!(canvas, self)
     }
 
     fn get_draw_rect(&self) -> &Rect {
