@@ -1,9 +1,9 @@
 use game::frame_hate;
 use game::load_image;
 use game::traits::draw::Draw;
+
 extern crate sdl2;
 
-use game::enemys_instance;
 use game::enums::entity_enum::EntityType;
 use game::enums::entity_enum::FriendilyType;
 use game::enums::entity_enum::HostileType;
@@ -43,7 +43,7 @@ pub fn main() {
     player.set_color(255, 0, 255);
     entity_game.push(Box::new(player));
 
-    game_state.enemy_counter = enemys_instance(&mut entity_game, 5);
+    game_state.enemy_counter = GameState::enemys_instance(&mut entity_game, 5);
     let fps = 60;
 
     'running: loop {
@@ -115,7 +115,8 @@ pub fn main() {
         if game_state.enemy_counter == game_state.enemy_killed {
             game_state.level += 1;
             game_state.enemy_killed = 0;
-            game_state.enemy_counter = enemys_instance(&mut entity_game, 4 + game_state.level);
+            game_state.enemy_counter =
+                GameState::enemys_instance(&mut entity_game, 4 + game_state.level);
         }
 
         window.present();
