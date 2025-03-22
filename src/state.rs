@@ -1,3 +1,5 @@
+use crate::contants::ENTITY_COLUNMS_N;
+use crate::contants::ENTITY_SIZE;
 use crate::enemy::Enemy;
 use crate::keydown;
 use crate::traits::draw::Draw;
@@ -6,8 +8,6 @@ use crate::Event;
 use crate::Event::KeyDown;
 use crate::EventPump;
 use crate::Keycode;
-use crate::ENTITY_COLUNMS_N;
-use crate::ENTITY_SIZE;
 use crate::TEXTURE_FILES;
 use rand::Rng;
 

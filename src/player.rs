@@ -1,3 +1,5 @@
+use crate::contants::FRAME_HATE;
+use crate::contants::WINDOW_WIDTH;
 use crate::draw_simple_rect_image;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::FriendilyType;
@@ -14,8 +16,6 @@ use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::Uuid;
-use crate::FRAME_HATE;
-use crate::WINDOW_WIDTH;
 use sdl2::render::Texture;
 use std::collections::HashMap;
 

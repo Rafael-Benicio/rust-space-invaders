@@ -1,3 +1,14 @@
+pub mod contants;
+pub mod enemy;
+pub mod enums;
+pub mod player;
+pub mod shoot;
+pub mod state;
+pub mod structs;
+pub mod traits;
+
+use crate::contants::ASSETS_PATH;
+use crate::contants::TEXTURE_FILES;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -12,29 +23,6 @@ use sdl2::keyboard::Keycode;
 use sdl2::video::{Window, WindowContext};
 use sdl2::VideoSubsystem;
 use sdl2::{EventPump, Sdl};
-
-pub mod enemy;
-pub mod enums;
-pub mod player;
-pub mod shoot;
-pub mod state;
-pub mod structs;
-pub mod traits;
-
-pub const WINDOW_WIDTH: u32 = 800;
-pub const ENTITY_COLUNMS_N: i32 = 11;
-pub const WINDOW_HEIGHT: u32 = 600;
-pub const FRAME_HATE: i16 = 60;
-pub const ENTITY_SIZE: (u32, u32) = (WINDOW_WIDTH / 13, WINDOW_HEIGHT / 16);
-pub const ASSETS_PATH: &str = "./src/assets/";
-pub const TEXTURE_FILES: [&str; 6] = [
-    "player.png",
-    "ship_1.png",
-    "ship_2.png",
-    "ship_3.png",
-    "ship_4.png",
-    "ship_5.png",
-];
 
 pub fn init_game(
     title: &str,

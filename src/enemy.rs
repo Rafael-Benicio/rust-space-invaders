@@ -1,3 +1,5 @@
+use crate::contants::FRAME_HATE;
+use crate::contants::WINDOW_WIDTH;
 use crate::draw_simple_rect_image;
 use crate::enums::entity_enum::EntityType;
 use crate::enums::entity_enum::HostileType;
@@ -13,8 +15,6 @@ use crate::traits::update::Update;
 use crate::BaseGameFlow;
 use crate::Uuid;
 use crate::Window;
-use crate::FRAME_HATE;
-use crate::WINDOW_WIDTH;
 use sdl2::render::Texture;
 use space_macros::{BaseGameFlow, BoxCollision};
 use std::collections::HashMap;
