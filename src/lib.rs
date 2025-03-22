@@ -1,11 +1,7 @@
-use crate::Event::KeyDown;
 use std::collections::HashMap;
 use std::path::Path;
 
-use crate::structs::enemy::Enemy;
-
 use crate::traits::base_game_flow::BaseGameFlow;
-use crate::traits::controler::Control;
 
 use sdl2::image::LoadTexture;
 use sdl2::render::{Canvas, Texture, TextureCreator};
@@ -17,7 +13,10 @@ use sdl2::video::{Window, WindowContext};
 use sdl2::VideoSubsystem;
 use sdl2::{EventPump, Sdl};
 
+pub mod enemy;
 pub mod enums;
+pub mod player;
+pub mod shoot;
 pub mod state;
 pub mod structs;
 pub mod traits;

@@ -1,5 +1,4 @@
-use crate::structs::shoot::Shoot;
-
+use crate::shoot::Shoot;
 use sdl2::event::Event;
 
 pub trait Control {

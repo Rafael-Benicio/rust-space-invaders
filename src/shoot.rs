@@ -6,10 +6,10 @@ use crate::state::GameState;
 use crate::structs::collisionbody::CollisionBody;
 use crate::structs::vector2d::Vector2D;
 use crate::traits::collision::BoxCollision;
+use crate::traits::controler::Control;
 use crate::traits::draw::Draw;
 use crate::traits::update::Update;
 use crate::BaseGameFlow;
-use crate::Control;
 use sdl2::render::Texture;
 use std::collections::HashMap;
 

@@ -1,5 +1,7 @@
 use game::frame_hate;
 use game::load_image;
+use game::player::Player;
+use game::shoot::Shoot;
 use game::traits::draw::Draw;
 
 extern crate sdl2;
@@ -11,8 +13,6 @@ use game::enums::update_commands::UpdateCommands;
 use game::init_game;
 use game::state::GameState;
 use game::structs::collisionbody::CollisionBody;
-use game::structs::player::Player;
-use game::structs::shoot::Shoot;
 use game::traits::base_game_flow::BaseGameFlow;
 use game::ENTITY_COLUNMS_N;
 use game::ENTITY_SIZE;

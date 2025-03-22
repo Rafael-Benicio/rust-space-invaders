@@ -1,4 +1,4 @@
-use crate::structs::shoot::Shoot;
+use crate::shoot::Shoot;
 use crate::Uuid;
 
 pub enum UpdateCommands {

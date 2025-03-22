@@ -1,7 +1,7 @@
+use crate::enemy::Enemy;
 use crate::keydown;
 use crate::traits::draw::Draw;
 use crate::BaseGameFlow;
-use crate::Enemy;
 use crate::Event;
 use crate::Event::KeyDown;
 use crate::EventPump;
